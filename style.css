@@ -1,12 +1,12 @@
-/* General Reset */
+/* 🌟 General Reset */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-    font-family: Arial, sans-serif;
     background: #f0f4f8;
     color: #333;
     display: flex;
@@ -17,40 +17,144 @@ body {
     padding: 20px;
 }
 
-/* Form Container */
+/* 🌟 Form Container */
 .form {
     background: #ffffff;
+    width: 60%;
     padding: 2rem;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
+    max-width: 450px;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-input, button {
+/* 🌟 Input Fields with Bottom Border */
+.input-container {
+    position: relative;
+    width: 100%;
+    margin-bottom: 15px;
+}
+#heading{
+    color: #007bff;
+    margin-bottom: 10px;
+}
+.input-container input {
+    width: 100%;
+    padding: 12px 10px 12px 40px; /* Added left padding for icon spacing */
+    /* padding: 12px 10px; */
+    border: none;
+    border-bottom: 2px solid #ccc;
+    font-size: 16px;
+    background: transparent;
+    outline: none;
+    transition: border-color 0.3s ease-in-out;
+}
+
+.input-container input:focus {
+    border-bottom: 2px solid #007bff;
+}
+
+.input-container i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #007bff;
+    font-size: 18px;
+}
+
+/* 🌟 Buttons */
+button {
     width: 100%;
     padding: 12px;
-    margin: 10px 0;
-    border-radius: 5px;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
 }
 
 #signup-btn {
+    width: 50%;
     background-color: #007bff;
     color: white;
+    border: none;
+}
+.signup-btns {
+   display: flex;
+   
+}
+#Google-Btn {
+    background-color: #ffffff;
+    
+    color: #333;
+    border: 2px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s ease-in-out;
 }
 
-#Google-Btn {
-    background-color: #dd4b39;
-    color: white;
+#Google-Btn i {
+    font-size: 20px;
+    background: linear-gradient(90deg, #4285F4, #34A853, #FBBC05, #EA4335);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+#Google-Btn:hover {
+    background-color: #f0f0f0;
+}
+
+.google-container{
+    margin-top: 10px;
+    text-align: center;
 }
 
 #signin-btn {
     background-color: transparent;
     color: #007bff;
-    border: 1px solid #007bff;
+    border: none;
 }
 
 #signin-btn:hover {
-    background-color: #007bff;
-    color: white;
+    color: #2a629d;
+    
+}
+
+/* 🌟 Signin Container */
+.signin-container {
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* 🌟 Responsive Design */
+@media (max-width: 768px) {
+    .form {
+        padding: 1rem;
+        width: 90%;
+        height: 350px;
+    }
+    input, button {
+        font-size: 14px;
+    }
+    #signin-btn{
+        font-size: 10px;
+        
+    }
+    .input-container input::placeholder {
+        font-size: 10px;
+       
+    }
 }

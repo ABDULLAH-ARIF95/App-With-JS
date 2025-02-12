@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" crossorigin="anonymous"></script>
     <title>My Posts</title>
     <link rel="stylesheet" href="myPosts.css">
 </head>
@@ -15,12 +16,33 @@
             </div>
             <span id="username">Guest</span>
         </div>
-        <div>
-        <button id="dashboard-btn">Dashboard</button>
-        <button id="signout-btn">Logout</button>
+        <div class="right-section">
+            <button id="for-post" class="icon-btn">
+                <i class="fa-solid fa-pen-to-square"></i>
+                <span>Post</span>
+            </button>
+        <!-- <button id="dashboard-btn">Dashboard</button> -->
+        <button id="dashboard-btn" class="icon-btn">
+            <i class="fa-solid fa-th-large"></i>
+            <span>Dashboard</span>
+        </button>
+        <button id="signout-btn" class="icon-btn logout-btn">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Logout</span>
+        </button>
     </div>
     </nav>
-
+    <div class="create-post">
+        <div class="inside-btn">
+        <h1>Create a new post</h1>
+        <button id="cancel-btn">
+            <i class="fa-solid fa-xmark"></i> 
+        </button>
+        
+    </div>
+    <input type="text" id="post-inp" placeholder="What's On Your Mind"> 
+    <button id="add"><i class="fa-solid fa-paper-plane"></i> Post</button>
+</div>
     <div class="my-posts"></div>
 
     <script type="module" src="../../firebaseConfig.js"></script>

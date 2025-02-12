@@ -1,108 +1,134 @@
-/* General Reset */
+/* 🌟 General Reset */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: #f0f4f8;
     color: #333;
     display: flex;
-    justify-content: center;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
     min-height: 100vh;
     padding: 20px;
 }
-
-/* Form Container */
+#heading{
+    color: #007bff;
+    margin-bottom: 10px;
+}
+/* 🌟 Form Container */
 .form {
+    width: 30%;
+    min-height: 300px;
     background: #ffffff;
     padding: 2rem;
+    padding-top: 3rem;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
-    animation: slideIn 0.5s ease-out;
+    max-width: 450px;
+    text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 200px;
 }
 
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(50px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Input Fields */
-input[type="text"], input[type="password"] {
+/* 🌟 Input Fields with Bottom Border and Icon Spacing */
+.input-container {
+    position: relative;
     width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    margin-bottom: 25px;
+}
+
+.input-container input {
+    width: 100%;
+    padding: 12px 10px 12px 40px; /* Added left padding for icon spacing */
+    border: none;
+    border-bottom: 2px solid #ccc;
     font-size: 16px;
-    background: #f9f9f9;
-    color: #333;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-input[type="text"]:focus, input[type="password"]:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+    background: transparent;
     outline: none;
+    transition: border-color 0.3s ease-in-out;
 }
 
-/* Buttons */
+.input-container input:focus {
+    border-bottom: 2px solid #007bff;
+}
+
+.input-container i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #007bff;
+    font-size: 18px;
+}
+
+/* 🌟 Buttons */
 button {
     width: 100%;
     padding: 12px;
-    margin: 10px 0;
-    border: none;
-    border-radius: 5px;
+    border-radius: 25px;
     font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-#signin-btn {
-    background-color: #007bff;
-    color: white;
-}
-
-#signin-btn:hover {
-    background-color: #0056b3;
-    transform: scale(1.02);
+    transition: background-color 0.3s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
 }
 
 #forSignUpbtn {
-    margin-top: 15px;
-    width: 30%;
+    width: 20%;
+    margin-top: 20px;
     background-color: transparent;
-    color: #007bff;
-    border: 1px solid #007bff;
+    color: blue;
+    border: 2px solid blue;
+}
+#forSignUpbtn:hover {
+    color: white;
+    background-color: blue;
+  
 }
 
-#forSignUpbtn:hover {
+
+#signin-btn {
+    background-color: transparent;
+    color: #007bff;
+    border: 2px solid #007bff;
+    width: 50%;
+    margin-top: 20px;
+}
+
+#signin-btn:hover {
     background-color: #007bff;
     color: white;
 }
 
-/* Responsive Design */
-@media (max-width: 480px) {
-    h1 {
-        font-size: 1.5rem;
-    }
+/* 🌟 Signin Container */
+.signin-container {
+    margin-top: 10px;
+    text-align: center;
+}
 
-    input[type="text"], input[type="password"], button {
+/* 🌟 Responsive Design */
+@media (max-width: 768px) {
+    .form {
+        width: 90%;
+       
+    }
+    input, button {
         font-size: 14px;
+    }
+    #forSignUpbtn{
+        font-size: 10px;
+        width: 50%;
+    }
+    .input-container input::placeholder {
+        font-size: 10px;
+       
     }
 }

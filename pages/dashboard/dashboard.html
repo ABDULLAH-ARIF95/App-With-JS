@@ -5,24 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="stylesheet" href="./dashboard.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
     
     <nav class="navbar">
         <div class="left-section">
+            <div class="logo">
+                <img  src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" class="goto-profile" id="profile-pic">
+            </div>
             <span id="username">User</span>
         </div>
-        <div class="logo">
-            <img  src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" id="profile-pic">
-        </div>
         <div class="right-section">
-            <button id="signout-btn">Logout</button>
+            <button id="for-post" class="icon-btn">
+                <i class="fa-solid fa-pen-to-square"></i>
+                <span>Post</span>
+            </button>
+            <button id="my-profile-btn" class="icon-btn">
+                <i class="fa-solid fa-user"></i>
+                <span>Profile</span>
+            </button>
+            <button id="signout-btn" class="icon-btn logout-btn">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </button>
         </div>
+        
     </nav>
     <div class="create-post">
+        <div class="inside-btn">
         <h1>Create a new post</h1>
-    <input type="text" id="post-inp"> 
-    <button id="add">Add</button>
+        <button id="cancel-btn">
+            <i class="fa-solid fa-xmark"></i> 
+        </button>
+        
+    </div>
+    <input type="text" id="post-inp" placeholder="What's On Your Mind"> 
+    <button id="add"><i class="fa-solid fa-paper-plane"></i> Post</button>
 </div>
 <div class="all-posts">
     

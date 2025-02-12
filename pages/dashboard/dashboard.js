@@ -1,9 +1,6 @@
-
 const loginUserUid = localStorage.getItem("loginUserUid");
 if (!loginUserUid) {
   window.location.replace("../../index.html");
-} else {
-  const username = localStorage.getItem("username");
 }
 import { auth, db } from "../../firebaseConfig.js";
 import {
@@ -11,22 +8,21 @@ import {
   collection,
   query,
   where,
+  doc,
   getDocs,
 } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js";
 import { signOut } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-auth.js";
-console.log(username);
 
-// import { userData  } from "../../app.js";
-// console.log('h1');
-let userDataArr = [];
+var userDataArr = [];
 let userData = async () => {
   try {
     const q = query(collection(db, "users"), where("uid", "==", loginUserUid));
     const querySnapshot = await getDocs(q);
-
-    querySnapshot.forEach(async (doc) => {
-      // console.log("User Data:", doc.data());
-     
+    let tempArr = [];
+    querySnapshot.docs.map(async (doc) => {
+      console.log("User Data:", doc.data());
+      let user = doc.data();
+      tempArr.push(user);
 
       console.log("doc.data() =>", doc.data());
       document.getElementById("username").innerText = doc.data().displayName;
@@ -35,24 +31,28 @@ let userData = async () => {
         profilePic.setAttribute("src", doc.data().photoURL);
       }
     });
-    // userDataArr.push(doc.data())
+    userDataArr = tempArr;
   } catch (error) {
     console.error("Error fetching user data:", error);
   }
 };
 userData();
-export {userData}
-// Logout functionality
+
 document.querySelector("#signout-btn").addEventListener("click", async () => {
-    try {
-        await signOut(auth);
-        console.log("Logout successful");
-        localStorage.removeItem("loginUserUid");
-        window.location.replace("../../index.html");
-    } catch (error) {
-        console.error("Logout error:", error.message);
-    }
+  try {
+    await signOut(auth);
+    console.log("Logout successful");
+    localStorage.removeItem("loginUserUid");
+    window.location.replace("../../index.html");
+  } catch (error) {
+    console.error("Logout error:", error.message);
+  }
 });
+var date = new Date();
+var currentDate = `${date.getDate()}/${
+  date.getMonth() + 1
+}/${date.getFullYear()}`;
+console.log(currentDate);
 
 // Create a new post
 async function createPost(text) {
@@ -60,61 +60,107 @@ async function createPost(text) {
     console.log("Firestore DB:", db);
 
     const docRef = await addDoc(collection(db, "posts"), {
-        postText: text,
-        uid: loginUserUid,
+      postText: text,
+      uid: loginUserUid,
+      dateOfCreation: currentDate,
     });
     console.log("Document written with ID:", docRef.id);
   } catch (error) {
-      console.error("Error creating post:", error);
+    console.error("Error creating post:", error);
   }
 }
-let allPostDiv = document.querySelector('.all-posts')
-let getAllPosts = async () => {
-    allPostDiv.innerHTML = ''
-    try {
-        const posts = await getDocs(collection(db, "posts"));
-        posts.forEach(async(post) => {
-            
-            const q = query(collection(db, "users"), where("uid", "==", post.data().uid));
-            const querySnapshot = await getDocs(q);
-            console.log(querySnapshot);
-            querySnapshot.forEach((doc) => {
-                // post.data() is never undefined for query post snapshots
-                console.log(doc.id, doc.data());
-                allPostDiv.innerHTML += `<div class="post">${doc.data().displayName}
-                    <p> ${post.data().postText}<?p>
-                    </div>`
-                })
-                console.log(post.data());
-         
-          
-        });
-    } catch (error) {
-        console.error(error);
-    }
-    }
-    getAllPosts()
 
-    // Prevent empty post submission
-    document.querySelector("#add").addEventListener("click", () => {
-        let postTxt = document.querySelector("#post-inp").value;
-        
-     allPostDiv.innerHTML += `<div class="post">${username}
-     <p>${postTxt}</p>
-     </div>`
- 
- if (postTxt === "") {
-     alert("Post cannot be empty!");
-     return;
+//get all posts
+let allPostDiv = document.querySelector(".all-posts");
+let getAllPosts = async () => {
+  allPostDiv.innerHTML = ""; // Clear existing posts
+
+  try {
+    const posts = await getDocs(collection(db, "posts"));
+
+    for (const post of posts.docs) {
+      const userDataQuery = query(
+        collection(db, "users"),
+        where("uid", "==", post.data().uid)
+      );
+      const querySnapshot = await getDocs(userDataQuery);
+      console.log("query", querySnapshot);
+
+      querySnapshot.forEach((doc) => {
+        // userDataArr1.push(doc.data())
+        console.log(doc.id, doc.data());
+        var pfURL;
+        if (doc.data().photoURL) {
+          pfURL = doc.data().photoURL;
+        } else {
+          pfURL =
+            "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+        }
+        allPostDiv.innerHTML += `
+                  <div class="post">
+                    <div class="logo">
+                    <img src=${pfURL}>
+                    <strong>${doc.data().displayName}</strong>
+                    </div>
+                      <p>${post.data().postText}</p>
+                      <p>Created at: ${post.data().dateOfCreation}</p>
+                  </div>
+              `;
+      });
     }
-    
-    createPost(postTxt);
-     document.querySelector("#post-inp").value = ""
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+  }
+};
+
+getAllPosts();
+var username = localStorage.getItem("username");
+document.querySelector("#add").addEventListener("click", () => {
+  let postTxt = document.querySelector("#post-inp").value;
+  console.log(userDataArr);
+  let pfURL;
+  let displayName;
+  for (let i = 0; i < userDataArr.length; i++) {
+    console.log(userDataArr[i].displayName);
+
+    displayName = userDataArr[i].displayName
+    if (userDataArr[i].photoURL) {
+      pfURL = userDataArr[i].photoURL;
+    } else {
+      pfURL =
+        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+    }
+  }
+  allPostDiv.innerHTML += `<div class="post">
+     <div class="logo">
+     <img src=${pfURL}>
+<strong>${displayName}</strong>
+                    </div>
+     <p>${postTxt}</p>
+     <p>Created at: ${currentDate}</p>
+     </div>`;
+
+  if (postTxt === "") {
+    alert("Post cannot be empty!");
+    return;
+  }
+
+  createPost(postTxt);
+  document.querySelector("#post-inp").value = "";
 });
 
-function myProfile(){
-    window.location.replace('../myPosts/myPosts.html')
+function myProfile() {
+  window.location.replace("../myPosts/myPosts.html");
 }
-document.querySelector("#profile-pic").addEventListener("click",function(){
-    myProfile()
-})
+document
+  .querySelector("#my-profile-btn")
+  .addEventListener("click", function () {
+    myProfile();
+  });
+var postIcon = document.querySelector(".create-post");
+document.querySelector("#for-post").addEventListener("click", function () {
+  postIcon.style.display = "block";
+});
+document.querySelector("#cancel-btn").addEventListener("click", function () {
+  postIcon.style.display = "none";
+});

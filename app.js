@@ -12,7 +12,10 @@ import {
 } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-auth.js";
 import {
   addDoc,
-  collection
+  getDocs,
+  collection,
+  query,
+  where
 } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js";
 const provider = new GoogleAuthProvider();
 
@@ -44,6 +47,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let passInp = document.querySelector("#password-inp").value;
     let nameInp = document.querySelector("#name-inp").value;
     let phoneNumInp = document.querySelector("#phoneNum-inp").value;
+    console.log(emailInp,passInp,nameInp,phoneNumInp);
+    
+    if (!emailInp||!passInp||!phoneNumInp||!nameInp === "") {
+     alert('Please input all the fields')
+     return
+    }
     signUpUser(emailInp, passInp, phoneNumInp, nameInp);
   });
   
@@ -53,14 +62,27 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Google Sign-Up
- function signUpWithGoogle() {
-  signInWithPopup(auth, provider)
-    .then(async(result) => {
-      const user = result.user;
-     await addUserData(user);
-      localStorage.setItem("loginUserUid", user.uid);
-      localStorage.setItem("username", user.displayName);
-      window.location.replace('./pages/dashboard/dashboard.html');
+ async function signUpWithGoogle() {
+   signInWithPopup(auth, provider)
+   .then(async(result) => {
+     const user = result.user;
+      try {
+        const userQuery = query(collection(db, "users"), where("email", '==',user.email));
+         const querySnapshot = await getDocs(userQuery);
+         querySnapshot.forEach((users) => {
+           if (users.data().email === user.email) {
+             localStorage.setItem("loginUserUid", user.uid);
+             localStorage.setItem("username", user.displayName);
+             window.location.replace('./pages/dashboard/dashboard.html');
+            return
+           }
+          
+          });
+        } catch (error) {
+          console.log(error);
+          
+        }
+        await addUserData(user);
     })
     .catch((error) => {
       console.error("Google Sign-In Error:", error.message);

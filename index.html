@@ -5,21 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
     <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
 </head>
 <body>
+    <h1 id="heading">Sign Up</h1>
     <div class="form">
-        <h1>Sign Up</h1>
-        <input type="text" placeholder="Enter your name" id="name-inp">
-        <input type="email" placeholder="Enter your email" id="email-inp">
-        <input type="tel" placeholder="Enter your phone number" id="phoneNum-inp">
-        <input type="password" placeholder="Enter your password" id="password-inp">
+        <div class="input-container">
+            <i class="fa fa-user"></i>
+            <input type="text" placeholder="Enter your name" id="name-inp">
+        </div>
+        
+        <div class="input-container">
+            <i class="fa fa-envelope"></i>
+            <input type="email" placeholder="Enter your email" id="email-inp">
+        </div>
+        
+        <div class="input-container">
+            <i class="fa fa-phone"></i>
+            <input type="tel" placeholder="Enter your phone number" id="phoneNum-inp">
+        </div>
+        
+        <div class="input-container">
+            <i class="fa fa-lock"></i>
+            <input type="password" placeholder="Enter your password" id="password-inp">
+        </div>
+        
         <button id="signup-btn">Sign Up</button> 
-        <p>---------- or ---------</p>
-        <button id="Google-Btn">Continue with Google</button>
-    </div>
-    <div class="signin-container">
         <button id="signin-btn">Already have an account? Sign In</button>
     </div>
+    <!-- <div class="google-login">
+        <i class="fa-brands fa-google"></i>
+        <span>Continue with Google</span>
+    </div>
+     -->
+    <!-- Google Login Button -->
+<div class="google-container">
+    <button id="Google-Btn">
+        <i class="fab fa-google"></i>
+        Continue with Google
+    </button>
+    
+</div>
+
+<!-- FontAwesome for Google Icon -->
+<script src="https://kit.fontawesome.com/YOUR_KIT_CODE.js" crossorigin="anonymous"></script>
+
     <script type="module" src="./firebaseConfig.js"></script>
     <script type="module" src="./app.js"></script>
 </body>
