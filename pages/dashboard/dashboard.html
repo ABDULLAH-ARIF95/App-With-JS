@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="./dashboard.css">
+</head>
+<body>
+    
+    <nav class="navbar">
+        <div class="left-section">
+            <span id="username">User</span>
+        </div>
+        <div class="logo">
+            <img  src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" id="profile-pic">
+        </div>
+        <div class="right-section">
+            <button id="signout-btn">Logout</button>
+        </div>
+    </nav>
+    <div class="create-post">
+        <h1>Create a new post</h1>
+    <input type="text" id="post-inp"> 
+    <button id="add">Add</button>
+</div>
+<div class="all-posts">
+    
+</div>
+    <script type="module" src="../../firebaseConfig.js"></script>
+    <script type="module" src="./dashboard.js"></script>
+</body>
+</html>

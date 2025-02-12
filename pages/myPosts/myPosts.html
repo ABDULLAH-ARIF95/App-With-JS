@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Posts</title>
+    <link rel="stylesheet" href="myPosts.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="left-section">
+            <div class="logo">
+                <img id="profile-pic" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" >
+            </div>
+            <span id="username">Guest</span>
+        </div>
+        <div>
+        <button id="dashboard-btn">Dashboard</button>
+        <button id="signout-btn">Logout</button>
+    </div>
+    </nav>
+
+    <div class="my-posts"></div>
+
+    <script type="module" src="../../firebaseConfig.js"></script>
+    <script type="module" src="./myPosts.js"></script>
+</body>
+</html>

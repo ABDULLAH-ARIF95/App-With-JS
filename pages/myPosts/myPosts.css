@@ -1,0 +1,138 @@
+/* 🌟 General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* 🌟 Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Left Section */
+.left-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 🌟 Logo */
+.logo img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Logout Button */
+#signout-btn,#dashboard-btn {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 5px;
+    transition: 0.3s ease-in-out;
+}
+
+#signout-btn:hover,#dashboard-btn:hover {
+    background-color: darkred;
+}
+
+/* 🌟 My Posts Section */
+.my-posts {
+    width: 90%;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 10px;
+}
+
+/* 🌟 Individual Post Box */
+.post {
+    background: white;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    word-wrap: break-word;
+}
+
+/* Hover Effect */
+.post:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* 👤 Username Styling */
+.post .user-name {
+    font-weight: bold;
+    color: #007bff;
+    font-size: 16px;
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Post Text */
+.post p {
+    font-size: 15px;
+    color: #333;
+    line-height: 1.5;
+}
+
+/* 🌟 Edit Button */
+.update-btn {
+    margin-top: 10px;
+    padding: 5px 10px;
+    background-color: #ffc107;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.update-btn:hover {
+    background-color: #ff9800;
+}
+
+/* 📅 Responsive Design */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .logo img {
+        margin-bottom: 10px;
+    }
+
+    .my-posts {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .post {
+        padding: 12px;
+    }
+
+    .post .user-name {
+        font-size: 14px;
+    }
+
+    .post p {
+        font-size: 14px;
+    }
+}
