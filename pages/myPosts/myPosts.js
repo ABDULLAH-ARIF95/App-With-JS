@@ -42,29 +42,34 @@ let myPostDiv = document.querySelector(".my-posts");
 
 let getMyPosts = async () => {
     try {
-        const q = query(collection(db, "posts"), where("uid", "==", loginUserUid,orderBy("dateOfCreation", "desc")));
+        const q = query(collection(db, "posts"), where("uid", "==", loginUserUid));
         const querySnapshot = await getDocs(q);
        
         myPostDiv.innerHTML = ""; // Clear previous posts
         
+        if (querySnapshot.empty) {
+            myPostDiv.innerHTML = `<p class="no-posts-message">You haven't created any posts yet. Start sharing your thoughts!</p>`;
+            return
+        }
+
         querySnapshot.forEach((post) => {
             console.log(post.id, post.data());
             
             myPostDiv.innerHTML += `
                 <div class="post">
-                    <div class="post-head">
-                        <span class="user-name">You</span>
-                        <div>
-                            <button class='edit-btn' id='${post.id}'><i class="fa-solid fa-pen"></i></button>
-                            <button class='update-btn' id='${post.id}' style = 'display:none'><i class="fa-solid fa-floppy-disk"></i></button>
+                <div class="post-head">
+                <span class="user-name">You</span>
+                <div>
+                <button class='edit-btn' id='${post.id}'><i class="fa-solid fa-pen"></i></button>
+                <button class='update-btn' id='${post.id}' style = 'display:none'><i class="fa-solid fa-floppy-disk"></i></button>
                             <button class='delete-btn' id='${post.id}'><i class="fa-solid fa-trash"></i></button>
-                        </div>
+                            </div>
                     </div>
-                    <input type='text' class='update-inp' style = 'display:none' value = '${post.data().postText}'>
+                    <input type='text' class='update-inp'  value = '${post.data().postText}'>
                     <p id='p-text'>${post.data().postText}</p>
                     <p>Created at: ${post.data().dateOfCreation}</p>
                 </div>`;
-
+                
         });
 
         // Add event listeners after posts are rendered
@@ -80,18 +85,19 @@ let getMyPosts = async () => {
                 updatePost(postId,event.currentTarget);
             });
         });
-
+        
         document.querySelectorAll(".delete-btn").forEach((btn) => {
             btn.addEventListener("click", (event) => {
                 let postId = event.currentTarget.id;
                 deletePost(postId);
             });
         });
-
+        
     } catch (error) {
         console.error("Error fetching posts:", error);
     }
 };
+getMyPosts();
 
 function editPost(postId,event) {
     
@@ -192,7 +198,7 @@ var username = localStorage.getItem('username')
      document.querySelector("#post-inp").value = ""
 });
 // Fetch posts when the page loads
-getMyPosts();
+//for signout 
 document.addEventListener("DOMContentLoaded", () => {
 document.querySelector("#signout-btn").addEventListener("click", async () => {
     try {
@@ -214,7 +220,8 @@ function dashboard(){
         dashboard()
 });
 
-    var postIcon =  document.querySelector('.create-post')
+//for show and hide post create div
+var postIcon =  document.querySelector('.create-post')
 document.querySelector("#for-post").addEventListener("click",function(){
    postIcon.style.display = 'block'
 })

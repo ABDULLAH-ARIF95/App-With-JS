@@ -213,6 +213,7 @@ body {
 .logo{
     display: flex;
     align-items: center;
+    margin-right: 5px;
     font-size: large;
 }
 /* 🌟 Responsive Design */
@@ -227,5 +228,14 @@ body {
     }
     .all-posts {
         width: 100%;
+    }
+    .navbar{
+        width: 100%;
+    }
+    #signout-btn ,#my-profile-btn,#for-post{
+        font-size: 12px;
+    }
+    .left-section span {
+        display: none;
     }
 }

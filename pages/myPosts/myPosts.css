@@ -69,10 +69,6 @@
     transform: scale(1.05);
 }
 
-/* #signout-btn i {
-    font-size: 18px;
-    color: white;
-    } */
     
     /* Logout Button */
     #signout-btn,#dashboard-btn,#for-post {
@@ -236,12 +232,34 @@
     background-color: #ff9800;
 }
 
+.no-posts-message {
+    text-align: center;
+    font-size: 18px;
+    color: gray;
+    margin-top: 20px;
+}
 
-/* 📅 Responsive Design */
+.update-inp {
+    display: none;
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    border: 2px solid #007bff;
+    border-radius: 5px;
+    outline: none;
+    transition: all 0.3s ease-in-out;
+}
+
+/* When visible */
+.update-inp:focus {
+    border-color: #0056b3;
+    box-shadow: 0 0 5px rgba(0, 91, 187, 0.5);
+}
+
+/*  Responsive Design */
 @media (max-width: 768px) {
     .navbar {
-        flex-direction: column;
-        text-align: center;
+        width: 100%;
     }
 
     .logo img {
@@ -250,10 +268,24 @@
 
     .my-posts {
         width: 100%;
+        
+    }
+    #signout-btn ,#dashboard-btn,#for-post{
+        font-size: 12px;
+    }
+    .left-section span{
+        display: none;
+    }
+    .logo {
+        padding-top: 10px;
     }
 }
 
 @media (max-width: 480px) {
+    #signout-btn ,#dashboard-btn,#for-post{
+        font-size: 9px;
+
+    }
     .post {
         padding: 12px;
     }

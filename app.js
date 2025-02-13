@@ -78,11 +78,11 @@ document.addEventListener('DOMContentLoaded', () => {
            }
           
           });
+          await addUserData(user);
         } catch (error) {
           console.log(error);
           
         }
-        await addUserData(user);
     })
     .catch((error) => {
       console.error("Google Sign-In Error:", error.message);

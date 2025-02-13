@@ -9,6 +9,7 @@ import {
   query,
   where,
   doc,
+  orderBy,
   getDocs,
 } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js";
 import { signOut } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-auth.js";
@@ -76,7 +77,7 @@ let getAllPosts = async () => {
   allPostDiv.innerHTML = ""; // Clear existing posts
 
   try {
-    const posts = await getDocs(collection(db, "posts"));
+    const posts = await getDocs(collection(db, "posts"),orderBy('dateOfCreation','desc'));
 
     for (const post of posts.docs) {
       const userDataQuery = query(
@@ -135,9 +136,9 @@ document.querySelector("#add").addEventListener("click", () => {
      <div class="logo">
      <img src=${pfURL}>
 <strong>${displayName}</strong>
-                    </div>
+    </div>
      <p>${postTxt}</p>
-     <p>Created at: ${currentDate}</p>
+     <p >Created at: ${currentDate}</p>
      </div>`;
 
   if (postTxt === "") {
