@@ -8,6 +8,8 @@ import {
   collection,
   query,
   where,
+  updateDoc,
+  getDoc,
   doc,
   orderBy,
   getDocs,
@@ -70,6 +72,45 @@ async function createPost(text) {
     console.error("Error creating post:", error);
   }
 }
+async function likeFun(post_id,like_btn) {
+  var post =await getDoc(doc(db, "posts", post_id))
+  let likesArr = post.data().likedBy ? [loginUserUid, ...post.data().likedBy] : [loginUserUid];
+  
+  console.log('hi',typeof(post_id),loginUserUid);
+  try {
+    await updateDoc(doc(db, "posts", post_id),{
+      likedBy:likesArr
+    })
+  } catch (error) {
+    console.log(error);
+    
+  }
+  like_btn.removeAttribute('class','like-button')
+  like_btn.nextElementSibling.style.display = 'block'
+}
+likeFun()
+async function unLikeFun(post_id,like_btn) {
+  var post =await getDoc(doc(db, "posts", post_id))
+  let likesArr = post.data().likedBy
+  
+  // console.log(post.data().likedBy);
+  likesArr = likesArr.filter(uid => uid !== loginUserUid)
+  console.log(likesArr);
+  console.log(post.data().likedBy);
+  
+  console.log('hi',typeof(post_id),loginUserUid);
+  try {
+    await updateDoc(doc(db, "posts", post_id),{
+      likedBy:likesArr
+    })
+  } catch (error) {
+    console.log(error);
+    
+  }
+  like_btn.style.display = 'none'
+  like_btn.previousElementSibling.style.display = 'block'
+
+}
 
 //get all posts
 let allPostDiv = document.querySelector(".all-posts");
@@ -105,15 +146,28 @@ let getAllPosts = async () => {
                     </div>
                       <p>${post.data().postText}</p>
                       <p>Created at: ${post.data().dateOfCreation}</p>
+                      <button class='like-button'id='${post.id}' onClick = 'likeFun()' > <i class="fa-regular fa-heart " ></i></button>
+                      <button class='unlike-button'id='${post.id}' onClick = 'unLikeFun()' > <i class="fa-solid fa-heart" style="color: red; "></i></button>
                   </div>
               `;
       });
+      document.querySelectorAll(".like-button").forEach((btn) => {
+        btn.addEventListener("click", (event) => {
+            let postId = event.currentTarget.id;
+            likeFun(postId,event.currentTarget);
+        });
+    });
+      document.querySelectorAll(".unlike-button").forEach((btn) => {
+        btn.addEventListener("click", (event) => {
+            let postId = event.currentTarget.id;
+            unLikeFun(postId,event.currentTarget);
+        });
+    });
     }
   } catch (error) {
     console.error("Error fetching posts:", error);
   }
 };
-
 getAllPosts();
 var username = localStorage.getItem("username");
 document.querySelector("#add").addEventListener("click", () => {

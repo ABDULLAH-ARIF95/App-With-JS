@@ -133,7 +133,27 @@ body {
     padding: 10px;
     margin-top: 80px;
 }
-
+.like-button {
+    font-size: 24px;
+    cursor: pointer;
+    color: red;
+    /* color: #888; */
+    border: none;
+    background: transparent;
+    transition: color 0.3s;
+}
+.unlike-button {
+    font-size: 24px;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    transition: color 0.3s;
+    display:none
+}
+.liked-icon {
+     color: red;
+     /* background-color: red; */
+}
 .post {
     background: white;
     padding: 15px;
