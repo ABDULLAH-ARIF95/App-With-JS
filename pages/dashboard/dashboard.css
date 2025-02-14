@@ -150,6 +150,7 @@ body {
     transition: color 0.3s;
     display:none
 }
+
 .liked-icon {
      color: red;
      /* background-color: red; */
@@ -163,12 +164,22 @@ body {
     border: 1px solid #ddd;
     word-wrap: break-word;
 }
+.email-render{
+    font-size:2px ;
+    padding-left:3px ;
+    margin-top:0px
+}
+
 .left-section,.right-section{
     display: flex;
     align-items: center;
 }
 
-
+.footer{
+    display: flex;
+    justify-content: space-between;
+   margin-top: 10px;
+}
 .icon-btn {
     display: flex;
     flex-direction: column;
@@ -245,6 +256,9 @@ body {
     .create-post {
         position: static;
         width: 90%;
+        margin-right: 60%;
+        margin-top: 30%;
+        margin-bottom: -30%;
     }
     .all-posts {
         width: 100%;

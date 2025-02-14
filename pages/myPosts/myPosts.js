@@ -5,6 +5,7 @@ import {
     deleteDoc,
     orderBy,
     addDoc,
+    getDoc,
     doc,
     query,
     where
@@ -16,6 +17,7 @@ var loginUserUid = localStorage.getItem("loginUserUid");
 if (!loginUserUid) {
     window.location.replace("../../index.html");
 }
+ let userProfilePic = [] ;
 let userData = async () => {
   try {
     const q = query(collection(db, "users"), where("uid", "==", loginUserUid));
@@ -25,6 +27,7 @@ let userData = async () => {
       console.log("doc.data() =>", doc.data());
       document.getElementById("username").innerText = doc.data().displayName;
       var profilePic = document.querySelector("#profile-pic");
+      userProfilePic.push(doc.data().photoURL)
       if (doc.data().photoURL) {
         profilePic.setAttribute("src", doc.data().photoURL);
       }
@@ -35,14 +38,15 @@ let userData = async () => {
 }
 };
 userData()
+console.log(userProfilePic);
 
-
+var likeCount;
 // Select the my-posts div
 let myPostDiv = document.querySelector(".my-posts");
 
 let getMyPosts = async () => {
     try {
-        const q = query(collection(db, "posts"), where("uid", "==", loginUserUid));
+        const q = query(collection(db, "posts"), where("uid", "==", loginUserUid,orderBy('dateOfCreation','desc')));
         const querySnapshot = await getDocs(q);
        
         myPostDiv.innerHTML = ""; // Clear previous posts
@@ -55,24 +59,79 @@ let getMyPosts = async () => {
         querySnapshot.forEach((post) => {
             console.log(post.id, post.data());
             
+            var likesArr =  post.data().likedBy
+            ? post.data().likedBy.includes(loginUserUid) 
+            : false;
+           likeCount = post.data().likedBy ? post.data().likedBy.length : 0;
             myPostDiv.innerHTML += `
-                <div class="post">
-                <div class="post-head">
-                <span class="user-name">You</span>
-                <div>
-                <button class='edit-btn' id='${post.id}'><i class="fa-solid fa-pen"></i></button>
-                <button class='update-btn' id='${post.id}' style = 'display:none'><i class="fa-solid fa-floppy-disk"></i></button>
-                            <button class='delete-btn' id='${post.id}'><i class="fa-solid fa-trash"></i></button>
-                            </div>
-                    </div>
-                    <input type='text' class='update-inp'  value = '${post.data().postText}'>
-                    <p id='p-text'>${post.data().postText}</p>
-                    <p>Created at: ${post.data().dateOfCreation}</p>
-                </div>`;
-                
+            <div class="post">
+            <div class="post-head">
+            <div class="post-logo">
+            <img src="${userProfilePic}">
+            <span class="user-name">You</span>
+            </div>
+      <div>
+        <button class='edit-btn' id='${post.id}'>
+          <i class="fa-solid fa-pen"></i>
+          </button>
+        <button class='update-btn' id='${post.id}' style='display:none'>
+          <i class="fa-solid fa-floppy-disk"></i>
+        </button>
+        <button class='delete-btn' id='${post.id}'>
+          <i class="fa-solid fa-trash"></i>
+          </button>
+      </div>
+      </div>
+    <input type='text' class='update-inp' value='${post.data().postText}'>
+    <p id='p-text'>${post.data().postText}</p>
+      <div class='footer'>
+                   <div style='display:flex'>
+                  <button class='like-button' id='${post.id}' style='display:${likesArr ? "none" : "block"}'> 
+                  <i class="fa-regular fa-heart"></i>
+                  </button>
+                  
+                  <button class='unlike-button' id='${post.id}' style='display:${likesArr ? "block" : "none"}'> 
+                  <i class="fa-solid fa-heart" style="color: red;"></i>
+                  </button>
+                   <p style='margin-left:5px;margin-top:3px;font-size:large;font-weight:500 '>${likeCount}</p>
+                   </div>
+                  <p class='posted-on' >Posted on: ${post.data().dateOfCreation}</p>
+                  
+  </div>
+`;
+
+            // myPostDiv.innerHTML += `
+            //     <div class="post">
+            //     <div class="post-head">
+            //     <span class="user-name">You</span>
+            //     <div>
+            //     <button class='edit-btn' id='${post.id}'><i class="fa-solid fa-pen"></i></button>
+            //     <button class='update-btn' id='${post.id}' style = 'display:none'><i class="fa-solid fa-floppy-disk"></i></button>
+            //                 <button class='delete-btn' id='${post.id}'><i class="fa-solid fa-trash"></i></button>
+            //                 </div>
+            //         </div>
+            //         <input type='text' class='update-inp'  value = '${post.data().postText}'>
+            //         <p id='p-text'>${post.data().postText}</p>
+            //         <p>Created at: ${post.data().dateOfCreation}</p>
+            //     </div>`;
+            
         });
 
         // Add event listeners after posts are rendered
+        document.querySelectorAll(".like-button").forEach((btn) => {
+            btn.addEventListener("click", (event) => {
+              let postId = event.currentTarget.id;
+              likeFun(postId, event.currentTarget);
+            });
+          });
+      
+          document.querySelectorAll(".unlike-button").forEach((btn) => {
+            btn.addEventListener("click", (event) => {
+              let postId = event.currentTarget.id;
+              unLikeFun(postId, event.currentTarget);
+            });
+          });
+
         document.querySelectorAll(".edit-btn").forEach((btn) => {
             btn.addEventListener("click", (event) => {
                 let postId = event.currentTarget.id;
@@ -98,7 +157,53 @@ let getMyPosts = async () => {
     }
 };
 getMyPosts();
+console.log(likeCount);
 
+async function likeFun(post_id,like_btn) {
+    // likeCount+1
+  var post =await getDoc(doc(db, "posts", post_id))
+  let likesArr = post.data().likedBy ? [loginUserUid, ...post.data().likedBy] : [loginUserUid];
+  
+  console.log('hi',typeof(post_id),loginUserUid);
+  try {
+    await updateDoc(doc(db, "posts", post_id),{
+      likedBy:likesArr
+    })
+  } catch (error) {
+    console.log(error);
+    
+  }
+  like_btn.style.display = 'none'
+  like_btn.nextElementSibling.style.display = 'block'
+  like_btn.nextElementSibling.nextElementSibling.innerHTML = likeCount
+  
+
+}
+
+async function unLikeFun(post_id,like_btn) {
+    likeCount-1
+  var post =await getDoc(doc(db, "posts", post_id))
+  let likesArr = post.data().likedBy
+  
+  // console.log(post.data().likedBy);
+  likesArr = likesArr.filter(uid => uid !== loginUserUid)
+  console.log(likesArr);
+  console.log(post.data().likedBy);
+  
+  console.log('hi',typeof(post_id),loginUserUid);
+  try {
+    await updateDoc(doc(db, "posts", post_id),{
+      likedBy:likesArr
+    })
+  } catch (error) {
+    console.log(error);
+    
+  }
+  like_btn.style.display = 'none'
+  like_btn.nextElementSibling.innerHTML = likeCount-1
+  like_btn.previousElementSibling.style.display = 'block'
+
+}
 function editPost(postId,event) {
     
     console.log("Editing post:", postId,event.nextElementSibling.nextElementSibling);

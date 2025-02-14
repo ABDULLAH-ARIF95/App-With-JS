@@ -102,6 +102,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-bottom: 10px
 }
 #cancel-btn {
     background-color: transparent;
@@ -135,6 +136,29 @@
     justify-content: space-between;
 }
 
+.like-button {
+    font-size: 24px;
+    cursor: pointer;
+    color: red;
+    /* color: #888; */
+    border: none;
+    background: transparent;
+    transition: color 0.3s;
+}
+
+.unlike-button {
+    font-size: 24px;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    transition: color 0.3s;
+    display:none
+}
+.footer{
+    display: flex;
+    justify-content: space-between;
+   margin-top: 10px;
+}
 .create-post h1 {
     font-size: 18px;
     font-weight: bold;
@@ -180,7 +204,15 @@
     margin: 20px auto;
     padding: 10px;
 }
-
+.post-logo img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+.post-logo{
+    display: flex;
+    align-items: center;
+}
 /* 🌟 Individual Post Box */
 .post {
     background: white;
@@ -261,7 +293,11 @@
     .navbar {
         width: 100%;
     }
-
+    .create-post {
+        position: static;
+        margin-left: 5%;
+        margin-top: 0%;
+    }
     .logo img {
         margin-bottom: 10px;
     }

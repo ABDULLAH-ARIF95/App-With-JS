@@ -76,6 +76,7 @@ async function likeFun(post_id,like_btn) {
   var post =await getDoc(doc(db, "posts", post_id))
   let likesArr = post.data().likedBy ? [loginUserUid, ...post.data().likedBy] : [loginUserUid];
   
+  
   console.log('hi',typeof(post_id),loginUserUid);
   try {
     await updateDoc(doc(db, "posts", post_id),{
@@ -85,8 +86,9 @@ async function likeFun(post_id,like_btn) {
     console.log(error);
     
   }
-  like_btn.removeAttribute('class','like-button')
+  like_btn.style.display = 'none'
   like_btn.nextElementSibling.style.display = 'block'
+  like_btn.nextElementSibling.nextElementSibling.style.display = 'block'
 }
 likeFun()
 async function unLikeFun(post_id,like_btn) {
@@ -108,17 +110,20 @@ async function unLikeFun(post_id,like_btn) {
     
   }
   like_btn.style.display = 'none'
+  like_btn.nextElementSibling.style.display = 'none'
   like_btn.previousElementSibling.style.display = 'block'
 
 }
 
 //get all posts
 let allPostDiv = document.querySelector(".all-posts");
+
 let getAllPosts = async () => {
   allPostDiv.innerHTML = ""; // Clear existing posts
 
   try {
-    const posts = await getDocs(collection(db, "posts"),orderBy('dateOfCreation','desc'));
+    const postsQuery = query(collection(db, "posts"), orderBy('dateOfCreation', 'desc'));
+    const posts = await getDocs(postsQuery);
 
     for (const post of posts.docs) {
       const userDataQuery = query(
@@ -126,81 +131,142 @@ let getAllPosts = async () => {
         where("uid", "==", post.data().uid)
       );
       const querySnapshot = await getDocs(userDataQuery);
-      console.log("query", querySnapshot);
 
       querySnapshot.forEach((doc) => {
-        // userDataArr1.push(doc.data())
         console.log(doc.id, doc.data());
-        var pfURL;
-        if (doc.data().photoURL) {
-          pfURL = doc.data().photoURL;
-        } else {
-          pfURL =
-            "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
-        }
-        allPostDiv.innerHTML += `
-                  <div class="post">
-                    <div class="logo">
-                    <img src=${pfURL}>
-                    <strong>${doc.data().displayName}</strong>
-                    </div>
-                      <p>${post.data().postText}</p>
-                      <p>Created at: ${post.data().dateOfCreation}</p>
-                      <button class='like-button'id='${post.id}' onClick = 'likeFun()' > <i class="fa-regular fa-heart " ></i></button>
-                      <button class='unlike-button'id='${post.id}' onClick = 'unLikeFun()' > <i class="fa-solid fa-heart" style="color: red; "></i></button>
+        var pfURL = doc.data().photoURL || 
+          "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+
+          if (post.data().likedBy ) { 
+          var likesArr = post.data().likedBy;
+          var likeCount = post.data().likedBy ? post.data().likedBy.length : 0;
+          likesArr.filter(uid=>uid===loginUserUid)
+          console.log(likesArr.length);
+          
+          if (likesArr.length>0) {
+            try {
+
+              allPostDiv.innerHTML += `
+                <div class="post">
+                  <div class="logo">
+                    <img src="${pfURL}">
+                      <div>
+                <strong>${doc.data().displayName}</strong>
+                 <p class='email-render'>${doc.data().email}</p>
+                 </div>
                   </div>
+                  <p>${post.data().postText}</p>
+                   <div class='footer'>
+                   <div style='display:flex'>
+                  <button class='like-button' id='${post.id}' style='display:${likesArr ? "none" : "block"}'> 
+                  <i class="fa-regular fa-heart"></i>
+                  </button>
+    
+                  <button class='unlike-button' id='${post.id}' style='display:${likesArr ? "block" : "none"}'> 
+                  <i class="fa-solid fa-heart" style="color: red;"></i>
+                  </button>
+                   <p style='margin-left:5px;margin-top:3px;font-size:large;font-weight:500'>${likeCount}</p>
+                   </div>
+                  <p class='posted-on' >Posted on: ${post.data().dateOfCreation}</p>
+                  </div>
+                </div>
               `;
+  
+            } catch (error) {
+              console.log(error);
+            }
+          } else {
+            allPostDiv.innerHTML += `
+              <div class="post">
+                <div class="logo">
+                  <img src="${pfURL}">
+                  <div>
+                  <strong>${doc.data().displayName}</strong>
+                   <p class= 'email-render'>${doc.data().email}</p>
+                   </div>
+                </div>
+                <p>${post.data().postText}</p>
+                <div class='footer'>
+                <div style='display:flex'>
+                <button class='like-button' id='${post.id}'> 
+                <i class="fa-regular fa-heart"></i>
+                </button>
+                <button class='unlike-button' id='${post.id}' style='display:none'> 
+                <div>
+                <i class="fa-solid fa-heart" style="color: red;"></i>
+                </button>
+                <p style='margin-left:5px;margin-top:3px;font-size:large;font-weight:500 ;display:none'>${likeCount+1}</p>
+                </div>
+                <p class='posted-on'>Posted on: ${post.data().dateOfCreation}</p>
+                </div>
+              </div>
+            `;
+          }
+        }
+        else {
+          allPostDiv.innerHTML += `
+            <div class="post">
+              <div class="logo">
+                <img src="${pfURL}">
+                <div>
+                <strong>${doc.data().displayName}</strong>
+                 <p class= 'email-render'>${doc.data().email}</p>
+                 </div>
+              </div>
+              <p>${post.data().postText}</p>
+              <div class='footer'>
+              <div style='display:flex'>
+              <button class='like-button' id='${post.id}'> 
+              <i class="fa-regular fa-heart"></i>
+              </button>
+              <button class='unlike-button' id='${post.id}' style='display:none'> 
+              <div>
+              <i class="fa-solid fa-heart" style="color: red;"></i>
+              </button>
+               <p style='margin-left:5px;margin-top:3px;font-size:large;font-weight:500 ;display:none'>${likeCount+1}</p>
+              </div>
+              <p class='posted-on'>Posted on: ${post.data().dateOfCreation}</p>
+              </div>
+            </div>
+          `;
+        }
       });
-      document.querySelectorAll(".like-button").forEach((btn) => {
-        btn.addEventListener("click", (event) => {
-            let postId = event.currentTarget.id;
-            likeFun(postId,event.currentTarget);
-        });
+      }
+
+      
+
+    // Attach event listeners after adding posts to the DOM
+    document.querySelectorAll(".like-button").forEach((btn) => {
+      btn.addEventListener("click", (event) => {
+        let postId = event.currentTarget.id;
+        likeFun(postId, event.currentTarget);
+      });
     });
-      document.querySelectorAll(".unlike-button").forEach((btn) => {
-        btn.addEventListener("click", (event) => {
-            let postId = event.currentTarget.id;
-            unLikeFun(postId,event.currentTarget);
-        });
+
+    document.querySelectorAll(".unlike-button").forEach((btn) => {
+      btn.addEventListener("click", (event) => {
+        let postId = event.currentTarget.id;
+        unLikeFun(postId, event.currentTarget);
+      });
     });
-    }
+
   } catch (error) {
     console.error("Error fetching posts:", error);
   }
 };
+
 getAllPosts();
 var username = localStorage.getItem("username");
 document.querySelector("#add").addEventListener("click", () => {
   let postTxt = document.querySelector("#post-inp").value;
   console.log(userDataArr);
-  let pfURL;
-  let displayName;
-  for (let i = 0; i < userDataArr.length; i++) {
-    console.log(userDataArr[i].displayName);
-
-    displayName = userDataArr[i].displayName
-    if (userDataArr[i].photoURL) {
-      pfURL = userDataArr[i].photoURL;
-    } else {
-      pfURL =
-        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
-    }
-  }
-  allPostDiv.innerHTML += `<div class="post">
-     <div class="logo">
-     <img src=${pfURL}>
-<strong>${displayName}</strong>
-    </div>
-     <p>${postTxt}</p>
-     <p >Created at: ${currentDate}</p>
-     </div>`;
-
+  
   if (postTxt === "") {
     alert("Post cannot be empty!");
     return;
   }
-
   createPost(postTxt);
+  getAllPosts()
   document.querySelector("#post-inp").value = "";
 });
 
@@ -209,6 +275,11 @@ function myProfile() {
 }
 document
   .querySelector("#my-profile-btn")
+  .addEventListener("click", function () {
+    myProfile();
+  });
+document
+  .querySelector(".goto-profile")
   .addEventListener("click", function () {
     myProfile();
   });
