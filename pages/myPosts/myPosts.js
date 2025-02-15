@@ -28,17 +28,17 @@ let userData = async () => {
       document.getElementById("username").innerText = doc.data().displayName;
       var profilePic = document.querySelector("#profile-pic");
       userProfilePic.push(doc.data().photoURL)
-      if (doc.data().photoURL) {
         profilePic.setAttribute("src", doc.data().photoURL);
-      }
+        console.log(doc.data().photoURL);
     });
+    
     // userDataArr.push(doc.data())
   } catch (error) {
     console.error("Error fetching user data:", error);
 }
 };
 userData()
-console.log(userProfilePic);
+// console.log(userProfilePic);
 
 var likeCount;
 // Select the my-posts div
@@ -99,21 +99,6 @@ let getMyPosts = async () => {
                   
   </div>
 `;
-
-            // myPostDiv.innerHTML += `
-            //     <div class="post">
-            //     <div class="post-head">
-            //     <span class="user-name">You</span>
-            //     <div>
-            //     <button class='edit-btn' id='${post.id}'><i class="fa-solid fa-pen"></i></button>
-            //     <button class='update-btn' id='${post.id}' style = 'display:none'><i class="fa-solid fa-floppy-disk"></i></button>
-            //                 <button class='delete-btn' id='${post.id}'><i class="fa-solid fa-trash"></i></button>
-            //                 </div>
-            //         </div>
-            //         <input type='text' class='update-inp'  value = '${post.data().postText}'>
-            //         <p id='p-text'>${post.data().postText}</p>
-            //         <p>Created at: ${post.data().dateOfCreation}</p>
-            //     </div>`;
             
         });
 
@@ -274,26 +259,8 @@ async function createPost(text) {
       console.error("Error creating post:", error);
   }
 }
-var username = localStorage.getItem('username')
     document.querySelector("#add").addEventListener("click", () => {
         let postTxt = document.querySelector("#post-inp").value;
-        
-        myPostDiv.innerHTML += `
-        <div class="post">
-            <div class="post-head">
-                <span class="user-name">You</span>
-                <div>
-                    <button class='edit-btn'><i class="fa-solid fa-pen"></i></button>
-                    <button class='update-btn'  style = 'display:none'><i class="fa-solid fa-floppy-disk"></i></button>
-                    <button class='delete-btn' ><i class="fa-solid fa-trash"></i></button>
-                </div>
-            </div>
-            <input type='text' class='update-inp' style = 'display:none' value = '${postTxt}'>
-            <p id='p-text'>${postTxt}</p>
-            <p>Created at: ${currentDate}</p>
-        </div>`;
-     
- 
  if (postTxt === "") {
      alert("Post cannot be empty!");
      return;
@@ -301,6 +268,7 @@ var username = localStorage.getItem('username')
     
     createPost(postTxt);
      document.querySelector("#post-inp").value = ""
+     getMyPosts()
 });
 // Fetch posts when the page loads
 //for signout 
@@ -332,4 +300,16 @@ document.querySelector("#for-post").addEventListener("click",function(){
 })
 document.querySelector("#cancel-btn").addEventListener("click",function(){
    postIcon.style.display = 'none'
+})
+document.querySelector("#delete-btn").addEventListener("click",async function(){
+  await deleteDoc(doc(db, "user", loginUserUid))
+  const q = query(collection(db, "posts"), where("uid", "==", loginUserUid)); 
+  const querySnapshot = await getDocs(q);
+  
+   querySnapshot.forEach(async(docSnap) => {
+          await deleteDoc(doc(db, "posts", docSnap.id)); 
+        })
+        
+        localStorage.removeItem("loginUserUid");
+        window.location.replace("../../index.html");
 })

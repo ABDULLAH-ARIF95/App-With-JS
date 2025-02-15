@@ -143,13 +143,13 @@ let getAllPosts = async () => {
           likesArr.filter(uid=>uid===loginUserUid)
           console.log(likesArr.length);
           
-          if (likesArr.length>0) {
+          if (likesArr.length>0 &&likesArr===loginUserUid) {
             try {
 
               allPostDiv.innerHTML += `
                 <div class="post">
                   <div class="logo">
-                    <img src="${pfURL}">
+                    <img src="${doc.data().photoURL}">
                       <div>
                 <strong>${doc.data().displayName}</strong>
                  <p class='email-render'>${doc.data().email}</p>
@@ -179,7 +179,7 @@ let getAllPosts = async () => {
             allPostDiv.innerHTML += `
               <div class="post">
                 <div class="logo">
-                  <img src="${pfURL}">
+                  <img src="${doc.data().photoURL}">
                   <div>
                   <strong>${doc.data().displayName}</strong>
                    <p class= 'email-render'>${doc.data().email}</p>
@@ -207,7 +207,7 @@ let getAllPosts = async () => {
           allPostDiv.innerHTML += `
             <div class="post">
               <div class="logo">
-                <img src="${pfURL}">
+                <img src="${doc.data().photoURL}">
                 <div>
                 <strong>${doc.data().displayName}</strong>
                  <p class= 'email-render'>${doc.data().email}</p>
