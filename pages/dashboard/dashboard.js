@@ -72,49 +72,7 @@ async function createPost(text) {
     console.error("Error creating post:", error);
   }
 }
-async function likeFun(post_id,like_btn) {
-  var post =await getDoc(doc(db, "posts", post_id))
-  let likesArr = post.data().likedBy ? [loginUserUid, ...post.data().likedBy] : [loginUserUid];
-  
-  
-  console.log('hi',typeof(post_id),loginUserUid);
-  try {
-    await updateDoc(doc(db, "posts", post_id),{
-      likedBy:likesArr
-    })
-  } catch (error) {
-    console.log(error);
-    
-  }
-  like_btn.style.display = 'none'
-  like_btn.nextElementSibling.style.display = 'block'
-  like_btn.nextElementSibling.nextElementSibling.style.display = 'block'
-}
-likeFun()
-async function unLikeFun(post_id,like_btn) {
-  var post =await getDoc(doc(db, "posts", post_id))
-  let likesArr = post.data().likedBy
-  
-  // console.log(post.data().likedBy);
-  likesArr = likesArr.filter(uid => uid !== loginUserUid)
-  console.log(likesArr);
-  console.log(post.data().likedBy);
-  
-  console.log('hi',typeof(post_id),loginUserUid);
-  try {
-    await updateDoc(doc(db, "posts", post_id),{
-      likedBy:likesArr
-    })
-  } catch (error) {
-    console.log(error);
-    
-  }
-  like_btn.style.display = 'none'
-  like_btn.nextElementSibling.style.display = 'none'
-  like_btn.previousElementSibling.style.display = 'block'
-
-}
-
+let likeCount;
 //get all posts
 let allPostDiv = document.querySelector(".all-posts");
 
@@ -139,7 +97,7 @@ let getAllPosts = async () => {
 
           if (post.data().likedBy ) { 
           var likesArr = post.data().likedBy;
-          var likeCount = post.data().likedBy ? post.data().likedBy.length : 0;
+           likeCount =  post.data().likedBy ? post.data().likedBy.length : 0;
           likesArr.filter(uid=>uid===loginUserUid)
           console.log(likesArr.length);
           
@@ -148,7 +106,7 @@ let getAllPosts = async () => {
 
               allPostDiv.innerHTML += `
                 <div class="post">
-                  <div class="logo">
+                  <div class="logo" id='${doc.data().uid}'>
                     <img src="${doc.data().photoURL}">
                       <div>
                 <strong>${doc.data().displayName}</strong>
@@ -167,7 +125,7 @@ let getAllPosts = async () => {
                   </button>
                    <p style='margin-left:5px;margin-top:3px;font-size:large;font-weight:500'>${likeCount}</p>
                    </div>
-                  <p class='posted-on' >Posted on: ${post.data().dateOfCreation}</p>
+                  <p class='posted-on' > ${post.data().dateOfCreation}</p>
                   </div>
                 </div>
               `;
@@ -178,7 +136,7 @@ let getAllPosts = async () => {
           } else {
             allPostDiv.innerHTML += `
               <div class="post">
-                <div class="logo">
+               <div class="logo" id='${doc.data().uid}'>
                   <img src="${doc.data().photoURL}">
                   <div>
                   <strong>${doc.data().displayName}</strong>
@@ -195,40 +153,13 @@ let getAllPosts = async () => {
                 <div>
                 <i class="fa-solid fa-heart" style="color: red;"></i>
                 </button>
-                <p style='margin-left:5px;margin-top:3px;font-size:large;font-weight:500 ;display:none'>${likeCount+1}</p>
+                <p style='margin-left:5px;margin-top:3px;font-size:large;font-weight:500 '>${likeCount}</p>
                 </div>
-                <p class='posted-on'>Posted on: ${post.data().dateOfCreation}</p>
+                <p class='posted-on'> ${post.data().dateOfCreation}</p>
                 </div>
               </div>
             `;
           }
-        }
-        else {
-          allPostDiv.innerHTML += `
-            <div class="post">
-              <div class="logo">
-                <img src="${doc.data().photoURL}">
-                <div>
-                <strong>${doc.data().displayName}</strong>
-                 <p class= 'email-render'>${doc.data().email}</p>
-                 </div>
-              </div>
-              <p>${post.data().postText}</p>
-              <div class='footer'>
-              <div style='display:flex'>
-              <button class='like-button' id='${post.id}'> 
-              <i class="fa-regular fa-heart"></i>
-              </button>
-              <button class='unlike-button' id='${post.id}' style='display:none'> 
-              <div>
-              <i class="fa-solid fa-heart" style="color: red;"></i>
-              </button>
-               <p style='margin-left:5px;margin-top:3px;font-size:large;font-weight:500 ;display:none'>${likeCount+1}</p>
-              </div>
-              <p class='posted-on'>Posted on: ${post.data().dateOfCreation}</p>
-              </div>
-            </div>
-          `;
         }
       });
       }
@@ -242,6 +173,13 @@ let getAllPosts = async () => {
         likeFun(postId, event.currentTarget);
       });
     });
+    document.querySelectorAll(".logo").forEach((btn) => {
+      btn.addEventListener("click", (event) => {
+        inspectedUser(event.currentTarget.id);
+        
+      });
+      
+    })
 
     document.querySelectorAll(".unlike-button").forEach((btn) => {
       btn.addEventListener("click", (event) => {
@@ -256,6 +194,59 @@ let getAllPosts = async () => {
 };
 
 getAllPosts();
+var inspectedUserId;
+ function inspectedUser(id){
+  if (id===loginUserUid) {
+    window.location.replace('../myPosts/myPosts.html')
+    return
+    
+  }
+   localStorage.setItem('inspectedUserUid',id)
+  window.location.replace('../users/users.html')
+}
+async function likeFun(post_id,like_btn) {
+  var post =await getDoc(doc(db, "posts", post_id))
+  let likesArr = post.data().likedBy ? [loginUserUid, ...post.data().likedBy] : [loginUserUid];
+  
+  
+  console.log('hi',typeof(post_id),loginUserUid);
+  try {
+    await updateDoc(doc(db, "posts", post_id),{
+      likedBy:likesArr
+    })
+  } catch (error) {
+    console.log(error);
+    
+  }
+  like_btn.style.display = 'none'
+  like_btn.nextElementSibling.style.display = 'block'
+  like_btn.nextElementSibling.nextElementSibling.innerHTML = likesArr.length
+}
+
+async function unLikeFun(post_id,like_btn) {
+  var post =await getDoc(doc(db, "posts", post_id))
+  let likesArr = post.data().likedBy
+  
+  // console.log(post.data().likedBy);
+  likesArr = likesArr.filter(uid => uid !== loginUserUid)
+  console.log(likesArr);
+  console.log(post.data().likedBy);
+  
+  console.log('hi',typeof(post_id),loginUserUid);
+  try {
+    await updateDoc(doc(db, "posts", post_id),{
+      likedBy:likesArr
+    })
+  } catch (error) {
+    console.log(error);
+    
+  }
+  like_btn.style.display = 'none'
+  like_btn.nextElementSibling.innerHTML = likesArr.length!==0?[likesArr.length]:0
+  like_btn.previousElementSibling.style.display = 'block'
+
+}
+
 var username = localStorage.getItem("username");
 document.querySelector("#add").addEventListener("click", () => {
   let postTxt = document.querySelector("#post-inp").value;

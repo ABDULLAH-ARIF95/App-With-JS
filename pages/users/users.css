@@ -1,0 +1,230 @@
+/* 🌟 General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: #f8f9fa;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    gap: 20px;
+}
+
+/* 🌟 Back Button */
+#back {
+    background-color: transparent;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    padding: 10px 15px;
+    transition: background-color 0.3s ease, transform 0.2s ease, color 0.3s ease;
+    color: #007bff;
+}
+
+#back:hover {
+    background-color: #007bff;
+    color: white;
+    transform: scale(1.05);
+}
+
+#back:focus {
+    outline: none;
+}
+
+#back i {
+    margin-right: 8px;
+}
+
+/* 🌟 User Profile Section */
+.user-profile {
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 25px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.user-profile:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.user-profile .profile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.user-profile .profile-header img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-right: 20px;
+    border: 2px solid #007bff;
+    padding: 2px;
+}
+
+.user-profile .profile-header h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 5px;
+}
+
+.user-profile .profile-header p {
+    font-size: 16px;
+    color: #555;
+}
+
+/* 🌟 Posts Section */
+.getPosts {
+    width: 90%;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 10px;
+}
+
+.post {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    word-wrap: break-word;
+}
+
+.post:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.post .post-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.post .post-logo {
+    display: flex;
+    align-items: center;
+}
+
+.post .post-logo img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+    border: 1px solid #ddd;
+}
+
+.post .user-name {
+    font-weight: bold;
+    color: #007bff;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.post p {
+    font-size: 15px;
+    color: #333;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.post .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.post .footer .like-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.post .footer .like-section p {
+    margin: 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.post .footer .posted-on {
+    font-size: 14px;
+    color: #777;
+}
+
+/* 🌟 Like and Unlike Buttons */
+.like-button, .unlike-button {
+    font-size: 24px;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    transition: color 0.3s ease, transform 0.2s ease;
+    padding: 5px;
+}
+
+.like-button {
+    color: #888;
+}
+
+.unlike-button {
+    color: red;
+    display: none;
+}
+
+.like-button:hover {
+    color: red;
+    transform: scale(1.1);
+}
+
+.unlike-button:hover {
+    color: darkred;
+    transform: scale(1.1);
+}
+
+/* 🌟 Responsive Design */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    .user-profile, .getPosts {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .post {
+        padding: 15px;
+    }
+
+    .post .user-name {
+        font-size: 14px;
+    }
+
+    .post p {
+        font-size: 14px;
+    }
+
+    .post .footer .like-section p, .post .footer .posted-on {
+        font-size: 12px;
+    }
+}

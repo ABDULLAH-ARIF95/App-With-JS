@@ -11,13 +11,14 @@ import {
     where
 } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js";
 import { auth, db } from "../../firebaseConfig.js";
-import { signOut } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-auth.js";
+import { signOut,deleteUser } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-auth.js";
 // Redirect if user is not logged in
 var loginUserUid = localStorage.getItem("loginUserUid");
 if (!loginUserUid) {
     window.location.replace("../../index.html");
 }
  let userProfilePic = [] ;
+ let userDocid = [] ;
 let userData = async () => {
   try {
     const q = query(collection(db, "users"), where("uid", "==", loginUserUid));
@@ -30,6 +31,9 @@ let userData = async () => {
       userProfilePic.push(doc.data().photoURL)
         profilePic.setAttribute("src", doc.data().photoURL);
         console.log(doc.data().photoURL);
+      userDocid.push(doc.id)
+        console.log(doc.id);
+
     });
     
     // userDataArr.push(doc.data())
@@ -39,7 +43,7 @@ let userData = async () => {
 };
 userData()
 // console.log(userProfilePic);
-
+// let fetchUserPosts=[]
 var likeCount;
 // Select the my-posts div
 let myPostDiv = document.querySelector(".my-posts");
@@ -55,7 +59,6 @@ let getMyPosts = async () => {
             myPostDiv.innerHTML = `<p class="no-posts-message">You haven't created any posts yet. Start sharing your thoughts!</p>`;
             return
         }
-
         querySnapshot.forEach((post) => {
             console.log(post.id, post.data());
             
@@ -63,6 +66,8 @@ let getMyPosts = async () => {
             ? post.data().likedBy.includes(loginUserUid) 
             : false;
            likeCount = post.data().likedBy ? post.data().likedBy.length : 0;
+           console.log(post.data());
+           
             myPostDiv.innerHTML += `
             <div class="post">
             <div class="post-head">
@@ -145,7 +150,6 @@ getMyPosts();
 console.log(likeCount);
 
 async function likeFun(post_id,like_btn) {
-    // likeCount+1
   var post =await getDoc(doc(db, "posts", post_id))
   let likesArr = post.data().likedBy ? [loginUserUid, ...post.data().likedBy] : [loginUserUid];
   
@@ -160,13 +164,13 @@ async function likeFun(post_id,like_btn) {
   }
   like_btn.style.display = 'none'
   like_btn.nextElementSibling.style.display = 'block'
-  like_btn.nextElementSibling.nextElementSibling.innerHTML = likeCount
-  
+  like_btn.nextElementSibling.nextElementSibling.innerHTML = likeCount+1
 
+  
+  
 }
 
 async function unLikeFun(post_id,like_btn) {
-    likeCount-1
   var post =await getDoc(doc(db, "posts", post_id))
   let likesArr = post.data().likedBy
   
@@ -185,7 +189,7 @@ async function unLikeFun(post_id,like_btn) {
     
   }
   like_btn.style.display = 'none'
-  like_btn.nextElementSibling.innerHTML = likeCount-1
+  like_btn.nextElementSibling.innerHTML = likeCount
   like_btn.previousElementSibling.style.display = 'block'
 
 }
@@ -301,15 +305,28 @@ document.querySelector("#for-post").addEventListener("click",function(){
 document.querySelector("#cancel-btn").addEventListener("click",function(){
    postIcon.style.display = 'none'
 })
-document.querySelector("#delete-btn").addEventListener("click",async function(){
-  await deleteDoc(doc(db, "user", loginUserUid))
-  const q = query(collection(db, "posts"), where("uid", "==", loginUserUid)); 
-  const querySnapshot = await getDocs(q);
-  
-   querySnapshot.forEach(async(docSnap) => {
-          await deleteDoc(doc(db, "posts", docSnap.id)); 
-        })
-        
-        localStorage.removeItem("loginUserUid");
-        window.location.replace("../../index.html");
-})
+document.querySelector("#delete-btn").addEventListener("click", async function() {
+  try {
+      const user = auth.currentUser;
+
+      await deleteUser(user);
+      console.log("User deleted from authentication.");
+      
+      
+       deleteDoc(doc(db, "users",userDocid[0]));
+
+      const qPosts = query(collection(db, "posts"), where("uid", "==", loginUserUid));
+      const querySnapshotPosts = await getDocs(qPosts);
+
+      
+      const q = query(collection(db, "posts"), where("uid", "==", loginUserUid)); 
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach(async(docSnap) => {
+        await deleteDoc(doc(db, "posts", docSnap.id)); 
+      })
+      localStorage.removeItem("loginUserUid");
+      window.location.replace("../../index.html");
+  } catch (error) {
+      console.error("Error deleting user:", error);
+  }
+});
