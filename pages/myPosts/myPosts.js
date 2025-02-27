@@ -330,3 +330,9 @@ document.querySelector("#delete-btn").addEventListener("click", async function()
       console.error("Error deleting user:", error);
   }
 });
+
+document
+.querySelector(".edit-icon")
+.addEventListener("click", function () {
+  window.location.replace('../edit-Profile/editProfile.html')
+});

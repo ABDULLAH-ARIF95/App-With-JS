@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="editProfile.css">
+</head>
+<body>
+    <div class="profile-container">
+        <h2>Edit Profile</h2>
+        <div class="profile-pic">
+            <img id="profileImage"  alt="Profile Picture">
+            
+            <!-- File input is hidden -->
+            <input type="file" id="fileInput" accept="image/*" hidden>
+            
+            <!-- <img id="uploadedImage" src="" alt="Uploaded Image"> -->
+            
+            <!-- Label acts as the icon/button -->
+            <label for="fileInput" class="upload-icon">
+                <i class="fas fa-camera"></i> <!-- FontAwesome Camera Icon -->
+            </label>
+        </div>
+        <form>
+            <label>Username</label>
+            <input type="text" id="username" placeholder="Enter username">
+            
+            <!-- <label>Bio</label> -->
+            <!-- <textarea id="bio" placeholder="Tell something about yourself"></textarea> -->
+            
+        </form>
+        <button id="submit">Save Changes</button>
+    </div>
+    <script type="module" src="editProfile.js"></script>
+</body>
+</html>
