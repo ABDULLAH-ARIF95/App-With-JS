@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forgot Password</title>
+    <link rel="stylesheet" href="forget.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+</head>
+<body>
+
+    <div class="forgot-password-container">
+        <h2>Reset Your Password</h2>
+        <p>Enter your email, and we'll send you a link to reset your password.</p>
+
+        <input type="email" id="email" placeholder="Enter your email" required>
+        <button id="reset-password-btn" ><i class="fa-solid fa-envelope"></i> Send Reset Link</button>
+        
+        <p id="message"></p>
+        <button id="back-btn"><i class="fa-solid fa-arrow-left"></i>Back to Login</button>
+    </div>
+
+    <script type="module" src="forget.js"></script>
+
+</body>
+</html>

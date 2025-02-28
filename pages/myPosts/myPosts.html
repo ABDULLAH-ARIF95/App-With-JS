@@ -8,7 +8,34 @@
     <link rel="stylesheet" href="myPosts.css">
 </head>
 <body>
-
+    <div id="modal-container" class="modal">
+        <div class="modal-content">
+          <i class="fa-solid fa-circle-check check-icon"></i>
+          <p id="message-p"></p>
+        </div>
+      </div>
+    <div class="confirm-container">
+        <div class="content">
+            <h4>Are You Sure  You Want To Delete Your Account?</h4>
+        <input type="password" id="confirmPassword" placeholder="Enter your password"  required>
+        <p id="error-message" class="error-message"></p>
+            <div class="button-group">
+                <button class="cancel" >Cancel</button>
+                <button class="delete">Delete</button>
+              </div>
+        </div>
+      </div>
+    <!-- <div class="confirmation">
+        <div class="content">
+            <h4>Are you sure you want to log out?</h4>
+            <div class="button-group">
+                <button class="cancel-button" >Cancel</button>
+                <button class="delete-button">Logout</button>
+              </div>
+        </div>
+      </div>
+       -->
+    
     <nav class="navbar">
         <div class="left-section">
             <div class="logo">

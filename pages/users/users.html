@@ -13,13 +13,29 @@
 <!-- Add an option to navigate to the user profile -->
 <div class="logo" id="user-id-123">
     <div class="post">
-            <button id="back"><i class="fas fa-arrow-left"></i> </button>
+<button id="back"><i class="fas fa-arrow-left"></i> </button>
 
-      <img id="profile-pic" alt="User Profile">
-      <div>
+<div style="display: flex; justify-content: space-between;">
+  <div>
+         <img id="profile-pic" alt="User Profile">
         <strong id="username">User Name</strong>
         <p class="email-render" id="email">user@example.com</p>
+       </div>
+       <div style="margin-top: 10%;display: flex;gap: 40%; margin-right: 30%;">
+       <div style="text-align: center;">
+        <strong>Posts</strong>
+        <p id="post-count"></p>
+       </div>
+       <div style="text-align: center;">
+        <strong>Friends</strong>
+        <p>0</p>
+       </div>
       </div>
+      </div>
+      <button id="friend-request-btn">
+        <i class="fa-solid fa-user-plus"></i> Send Friend Request
+    </button>
+    
     </div>
    <div class="getPosts"></div>
     

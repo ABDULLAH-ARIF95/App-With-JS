@@ -15,6 +15,17 @@ import {
   getDocs,
 } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js";
 import { signOut } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-auth.js";
+async function messageModal(messageText) {
+  let message = document.querySelector('#message-p')
+  message.innerText = messageText
+  const modal = document.getElementById("modal-container");
+  modal.style.display = "block";
+
+  // Hide modal after 2 seconds
+  setTimeout(() => {
+    modal.style.display = "none";
+  }, 3000);
+}
 
 var userDataArr = [];
 let userData = async () => {
@@ -44,9 +55,12 @@ userData();
 document.querySelector("#signout-btn").addEventListener("click", async () => {
   try {
     await signOut(auth);
+    messageModal('Logout Successful!')
     console.log("Logout successful");
     localStorage.removeItem("loginUserUid");
-    window.location.replace("../../index.html");
+    setTimeout(() => {
+      window.location.replace("../../index.html");
+    }, 3000);
   } catch (error) {
     console.error("Logout error:", error.message);
   }
@@ -68,6 +82,7 @@ async function createPost(text) {
       dateOfCreation: currentDate,
     });
     console.log("Document written with ID:", docRef.id);
+    messageModal('Post created successfully!')
   } catch (error) {
     console.error("Error creating post:", error);
   }
@@ -92,16 +107,21 @@ let getAllPosts = async () => {
 
       querySnapshot.forEach((doc) => {
         console.log(doc.id, doc.data());
-        var pfURL = doc.data().photoURL || 
-          "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
-
+        let isLiked ;
+        likeCount = 0
           if (post.data().likedBy ) { 
           var likesArr = post.data().likedBy;
-           likeCount =  post.data().likedBy ? post.data().likedBy.length : 0;
-          likesArr.filter(uid=>uid===loginUserUid)
-          console.log(likesArr.length);
+
           
-          if (likesArr.length>0 &&likesArr===loginUserUid) {
+          // Check if logged-in user has liked the post
+           isLiked = likesArr.includes(loginUserUid);
+          // Count likes
+          likeCount =  post.data().likedBy ? post.data().likedBy.length : 0;
+
+          // likesArr.filter(uid=>uid===loginUserUid)
+          // console.log(likesArr.length);
+          }
+          // if (likesArr.length>0 &&likesArr===loginUserUid) {
             try {
 
               allPostDiv.innerHTML += `
@@ -116,11 +136,11 @@ let getAllPosts = async () => {
                   <p>${post.data().postText}</p>
                    <div class='footer'>
                    <div style='display:flex'>
-                  <button class='like-button' id='${post.id}' style='display:${likesArr ? "none" : "block"}'> 
+                  <button class='like-button' id='${post.id}' style='display:${isLiked ? "none" : "block"}'> 
                   <i class="fa-regular fa-heart"></i>
                   </button>
     
-                  <button class='unlike-button' id='${post.id}' style='display:${likesArr ? "block" : "none"}'> 
+                  <button class='unlike-button' id='${post.id}' style='display:${isLiked ? "block" : "none"}'> 
                   <i class="fa-solid fa-heart" style="color: red;"></i>
                   </button>
                    <p style='margin-left:5px;margin-top:3px;font-size:large;font-weight:500'>${likeCount}</p>
@@ -133,36 +153,43 @@ let getAllPosts = async () => {
             } catch (error) {
               console.log(error);
             }
-          } else {
-            allPostDiv.innerHTML += `
-              <div class="post">
-               <div class="logo" id='${doc.data().uid}'>
-                  <img src="${doc.data().photoURL}">
-                  <div>
-                  <strong>${doc.data().displayName}</strong>
-                   <p class= 'email-render'>${doc.data().email}</p>
-                   </div>
-                </div>
-                <p>${post.data().postText}</p>
-                <div class='footer'>
-                <div style='display:flex'>
-                <button class='like-button' id='${post.id}'> 
-                <i class="fa-regular fa-heart"></i>
-                </button>
-                <button class='unlike-button' id='${post.id}' style='display:none'> 
-                <div>
-                <i class="fa-solid fa-heart" style="color: red;"></i>
-                </button>
-                <p style='margin-left:5px;margin-top:3px;font-size:large;font-weight:500 '>${likeCount}</p>
-                </div>
-                <p class='posted-on'> ${post.data().dateOfCreation}</p>
-                </div>
-              </div>
-            `;
-          }
+          })
         }
-      });
-      }
+
+       
+        // console.log(messageModal());
+        
+
+      //     } else {
+      //       allPostDiv.innerHTML += `
+      //         <div class="post">
+      //          <div class="logo" id='${doc.data().uid}'>
+      //             <img src="${doc.data().photoURL}">
+      //             <div>
+      //             <strong>${doc.data().displayName}</strong>
+      //              <p class= 'email-render'>${doc.data().email}</p>
+      //              </div>
+      //           </div>
+      //           <p>${post.data().postText}</p>
+      //           <div class='footer'>
+      //           <div style='display:flex'>
+      //           <button class='like-button' id='${post.id}'> 
+      //           <i class="fa-regular fa-heart"></i>
+      //           </button>
+      //           <button class='unlike-button' id='${post.id}' style='display:none'> 
+      //           <div>
+      //           <i class="fa-solid fa-heart" style="color: red;"></i>
+      //           </button>
+      //           <p style='margin-left:5px;margin-top:3px;font-size:large;font-weight:500 '>${likeCount}</p>
+      //           </div>
+      //           <p class='posted-on'> ${post.data().dateOfCreation}</p>
+      //           </div>
+      //         </div>
+      //       `;
+      //     }
+      //   }
+      // });
+      // }
 
       
 

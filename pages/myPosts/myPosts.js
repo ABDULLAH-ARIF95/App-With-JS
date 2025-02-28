@@ -11,11 +11,22 @@ import {
     where
 } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js";
 import { auth, db } from "../../firebaseConfig.js";
-import { signOut,deleteUser } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-auth.js";
+import { signOut,deleteUser,EmailAuthProvider,reauthenticateWithCredential  } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-auth.js";
 // Redirect if user is not logged in
 var loginUserUid = localStorage.getItem("loginUserUid");
 if (!loginUserUid) {
     window.location.replace("../../index.html");
+}
+function messageModal(messageText) {
+  let message = document.querySelector('#message-p')
+  message.innerText = messageText
+  const modal = document.getElementById("modal-container");
+  modal.style.display = "block";
+
+  // Hide modal after 2 seconds
+  setTimeout(() => {
+    modal.style.display = "none";
+  }, 3000);
 }
  let userProfilePic = [] ;
  let userDocid = [] ;
@@ -42,15 +53,13 @@ let userData = async () => {
 }
 };
 userData()
-// console.log(userProfilePic);
-// let fetchUserPosts=[]
+
 var likeCount;
-// Select the my-posts div
 let myPostDiv = document.querySelector(".my-posts");
 
 let getMyPosts = async () => {
     try {
-        const q = query(collection(db, "posts"), where("uid", "==", loginUserUid,orderBy('dateOfCreation','desc')));
+        const q = query(collection(db, "posts"), where("uid", "==", loginUserUid,orderBy('dateOfCreation', 'desc')));
         const querySnapshot = await getDocs(q);
        
         myPostDiv.innerHTML = ""; // Clear previous posts
@@ -230,6 +239,7 @@ async function updatePost(postId,event) {
     event.nextElementSibling.style.display = 'block'
     postContainer.querySelector(".update-btn").style.display = 'none';
     postContainer.querySelector("#p-text").style.display = 'block';
+    messageModal('Post updated successfully!')
           getMyPosts();
         })
       } catch (error) {
@@ -242,6 +252,7 @@ async function updatePost(postId,event) {
 async function deletePost(postId) {
     console.log(postId);
     await deleteDoc(doc(db, "posts", postId)).then(()=>{
+      messageModal('Post deleted successfully!')
         getMyPosts()
     })
     
@@ -259,6 +270,7 @@ async function createPost(text) {
         dateOfCreation:currentDate
     });
     console.log("Document written with ID:", docRef.id);
+    messageModal('Post Created Successfuly!')
   } catch (error) {
       console.error("Error creating post:", error);
   }
@@ -280,15 +292,19 @@ document.addEventListener("DOMContentLoaded", () => {
 document.querySelector("#signout-btn").addEventListener("click", async () => {
     try {
         await signOut(auth);
-        console.log("Logout successful");
-        localStorage.removeItem("loginUserUid");
-        localStorage.removeItem("username");
+      messageModal('logout Successful!')
+      localStorage.removeItem("loginUserUid");
+      localStorage.removeItem("username");
+      setTimeout(() => {
         window.location.replace("../../index.html");
+      }, 3000);
     } catch (error) {
-        console.error("Logout error:", error.message);
+      console.error("Logout error:", error.message);
     }
-});
+  });
 })
+
+
 // for move to dashboard
 function dashboard(){
     window.location.replace("../dashboard/dashboard.html");
@@ -305,32 +321,60 @@ document.querySelector("#for-post").addEventListener("click",function(){
 document.querySelector("#cancel-btn").addEventListener("click",function(){
    postIcon.style.display = 'none'
 })
-document.querySelector("#delete-btn").addEventListener("click", async function() {
-  try {
-      const user = auth.currentUser;
-
-      await deleteUser(user);
-      console.log("User deleted from authentication.");
-      
-      
-       deleteDoc(doc(db, "users",userDocid[0]));
-
-      const qPosts = query(collection(db, "posts"), where("uid", "==", loginUserUid));
-      const querySnapshotPosts = await getDocs(qPosts);
-
-      
-      const q = query(collection(db, "posts"), where("uid", "==", loginUserUid)); 
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach(async(docSnap) => {
-        await deleteDoc(doc(db, "posts", docSnap.id)); 
-      })
-      localStorage.removeItem("loginUserUid");
-      window.location.replace("../../index.html");
-  } catch (error) {
-      console.error("Error deleting user:", error);
-  }
+var confirmDiv =  document.querySelector('.confirm-container')
+// var confirmDiv =  document.querySelector('.confirm-container')
+document.querySelector("#delete-btn").addEventListener("click",  function() {
+  confirmDiv.style.display = 'block'
 });
 
+document.querySelector(".cancel").addEventListener("click",  function() {
+  confirmDiv.style.display = 'none'
+});
+async function deleteAccount(){
+  const password = document.getElementById("confirmPassword").value;
+  const errorMessage = document.getElementById("error-message");
+  
+  if (!password) {
+    errorMessage.innerText = "Password is required!";
+    errorMessage.style.display = "block";
+    return;
+  }
+  
+  try {
+    const user = auth.currentUser;
+    const credentials = EmailAuthProvider.credential(user.email, password);
+    await reauthenticateWithCredential(user, credentials);
+    
+    await deleteUser(user);
+    console.log("User deleted from authentication.");
+    
+    confirmDiv.style.display = 'none'
+    messageModal("Your account has been deleted successfully.")
+    
+     deleteDoc(doc(db, "users",userDocid[0]));
+
+    const qPosts = query(collection(db, "posts"), where("uid", "==", loginUserUid));
+    const querySnapshotPosts = await getDocs(qPosts);
+    
+    
+    const q = query(collection(db, "posts"), where("uid", "==", loginUserUid)); 
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach(async(docSnap) => {
+      await deleteDoc(doc(db, "posts", docSnap.id)); 
+    })
+    localStorage.removeItem("loginUserUid");
+    window.location.replace("../../index.html");
+} catch (error) {
+    console.error("Error deleting user:", error);
+    console.error(error);
+    errorMessage.innerText = "Incorrect password. Try again.";
+    errorMessage.style.display = "block";
+  }
+}
+document.querySelector(".delete").addEventListener("click",  function() {
+  deleteAccount()
+
+});
 document
 .querySelector(".edit-icon")
 .addEventListener("click", function () {

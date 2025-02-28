@@ -16,6 +16,40 @@ body {
     min-height: 100vh;
     padding: 20px;
 }
+#error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: -30px;
+    display: none;
+  }
+  .show-pass  {
+    position: relative;
+    left: 120px;
+    bottom: 60px;
+    cursor: pointer;
+    color: #007bff;
+    font-size: 18px;
+  }
+  #forgot-password {
+    color: #007bff;
+    text-decoration: none;
+    cursor: pointer;
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+}
+
+#forgot-password:hover {
+    text-decoration: underline;
+    color: #0056b3;
+}
+
+#message, #error-message {
+    margin-top: 10px;
+    font-size: 14px;
+    text-align: center;
+}
+
 #heading{
     color: #007bff;
     margin-bottom: 10px;
@@ -46,6 +80,7 @@ body {
 .input-container input {
     width: 100%;
     padding: 12px 10px 12px 40px; /* Added left padding for icon spacing */
+    /* padding-right: 50px; */
     border: none;
     border-bottom: 2px solid #ccc;
     font-size: 16px;
@@ -53,6 +88,8 @@ body {
     outline: none;
     transition: border-color 0.3s ease-in-out;
 }
+
+
 
 .input-container input:focus {
     border-bottom: 2px solid #007bff;
@@ -120,6 +157,12 @@ button {
         width: 90%;
        
     }
+    .show-pass  {
+        
+        left: 80px;
+        bottom: 55px;
+        font-size: 18px;
+      }
     input, button {
         font-size: 14px;
     }

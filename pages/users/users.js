@@ -43,6 +43,8 @@ let userData = async () => {
   };
   userData()
   var getUserPosts = document.querySelector('.getPosts')
+  var postCount =  0
+  var postsNum = document.querySelector('#post-count')
   var likeCount;
   let getPosts = async () => {
       try {
@@ -63,7 +65,7 @@ let userData = async () => {
               : false;
              likeCount = post.data().likedBy ? post.data().likedBy.length : 0;
              console.log(post.data());
-             
+             postCount++
               getUserPosts.innerHTML += `
               <div class="post">
               <div class="post-head">
@@ -82,7 +84,7 @@ let userData = async () => {
                     <button class='unlike-button' id='${post.id}' style='display:${likesArr ? "block" : "none"}'> 
                     <i class="fa-solid fa-heart" style="color: red;"></i>
                     </button>
-                     <p style='margin-left:5px;margin-top:3px;font-size:large;font-weight:500 '>${likeCount}</p>
+                     <p style='margin-left:2px;margin-top:14px;font-size:large;font-weight:500 '>${likeCount}</p>
                      </div>
                     <p class='posted-on' > ${post.data().dateOfCreation}</p>
                     
@@ -105,6 +107,7 @@ let userData = async () => {
                 unLikeFun(postId, event.currentTarget);
               });
             });
+            postsNum.innerHTML= postCount 
       } catch (error) {
           console.error("Error fetching posts:", error);
       }
