@@ -19,6 +19,18 @@ import {
 } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js";
 const provider = new GoogleAuthProvider();
 
+async function messageModal(messageText) {
+  let message = document.querySelector('#message-p')
+  message.innerText = messageText
+  const modal = document.getElementById("modal-container");
+  modal.style.display = "block";
+
+  // Hide modal after 2 seconds
+  setTimeout(() => {
+    modal.style.display = "none";
+  }, 3000);
+}
+
 // Function to add user data to Firestore
 async function addUserData (user)  {
   try {
@@ -73,7 +85,10 @@ document.addEventListener('DOMContentLoaded', () => {
            if (users.data().email === user.email) {
              localStorage.setItem("loginUserUid", user.uid);
              localStorage.setItem("username", user.displayName);
-             window.location.replace('./pages/dashboard/dashboard.html');
+             messageModal("Successfully signed up with Google!")
+             setTimeout(() => {
+               window.location.replace('./pages/dashboard/dashboard.html');
+             }, 3000);
             return
            }
           
@@ -81,7 +96,6 @@ document.addEventListener('DOMContentLoaded', () => {
           await addUserData(user);
         } catch (error) {
           console.log(error);
-          
         }
     })
     .catch((error) => {
@@ -103,7 +117,10 @@ let signUpUser = (Email, Password, PhoneNum, Name) => {
       })
       localStorage.setItem("loginUserUid", user.uid);
       localStorage.setItem("username", Name);
-      window.location.replace('./pages/dashboard/dashboard.html');
+      messageModal("Successfully signed up!")
+      setTimeout(() => {
+        window.location.replace('./pages/dashboard/dashboard.html');
+      }, 3000);
     })
     .catch((error) => {
       console.error("Sign Up Error:", error.message);

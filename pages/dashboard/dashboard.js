@@ -15,6 +15,7 @@ import {
   getDocs,
 } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js";
 import { signOut } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-auth.js";
+
 async function messageModal(messageText) {
   let message = document.querySelector('#message-p')
   message.innerText = messageText

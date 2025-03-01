@@ -4,6 +4,18 @@ import { auth } from "../../firebaseConfig.js";
 document.querySelector('#forSignUpbtn').addEventListener('click', function() {
     window.location.replace('../../index.html');
 });
+async function messageModal(messageText) {
+    let message = document.querySelector('#message-p')
+    message.innerText = messageText
+    const modal = document.getElementById("modal-container");
+    modal.style.display = "block";
+  
+    // Hide modal after 2 seconds
+    setTimeout(() => {
+      modal.style.display = "none";
+    }, 3000);
+  }
+
 document.getElementById("togglePassword").addEventListener("click", function () {
     const passwordInput = document.getElementById("password");
     if (passwordInput.type === "password") {
@@ -23,7 +35,10 @@ let signIn = async (email, password) => {
         
         console.log("Login success:", user);
         localStorage.setItem("loginUserUid", user.uid);
-        window.location.replace('../dashboard/dashboard.html');
+        messageModal('Sign-in Successful!')
+        setTimeout(() => {
+            window.location.replace('../dashboard/dashboard.html')
+          }, 3000);
     } catch (error) {
         console.error("Login error:", error.code, error.message);
         errorMessage.innerText = "Incorrect password. Try again.";

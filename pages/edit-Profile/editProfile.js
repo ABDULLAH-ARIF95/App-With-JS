@@ -11,7 +11,6 @@ import {
     where
 } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js";
 import {  db } from "../../firebaseConfig.js";
-import { signOut,deleteUser } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-auth.js";
 // Redirect if user is not logged in
 var loginUserUid = localStorage.getItem("loginUserUid");
 if (!loginUserUid) {
@@ -52,6 +51,7 @@ userData()
      let formData = new FormData();
      formData.append("file", file);
      formData.append("upload_preset", "profileURL");
+     
  
      fetch("https://api.cloudinary.com/v1_1/dxfcwpgqp/image/upload", {
        method: "POST",
