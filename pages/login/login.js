@@ -1,6 +1,12 @@
-import {signInWithEmailAndPassword,sendPasswordResetEmail,EmailAuthProvider,reauthenticateWithCredential  } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-auth.js";
-import { auth } from "../../firebaseConfig.js";
-
+import {signInWithEmailAndPassword,signInWithPopup,GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-auth.js";
+import { auth,db } from "../../firebaseConfig.js";
+import {
+  getDocs,
+  collection,
+  query,
+  where
+} from "https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js";
+const provider = new GoogleAuthProvider();
 document.querySelector('#forSignUpbtn').addEventListener('click', function() {
     window.location.replace('../../index.html');
 });
@@ -46,7 +52,35 @@ let signIn = async (email, password) => {
         
     }
 };
+// Google Sign-Up
+async function signUpWithGoogle() {
+  try {
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
 
+    const userQuery = query(collection(db, "users"), where("email", "==", user.email));
+    const querySnapshot = await getDocs(userQuery);
+
+    if (!querySnapshot.empty) {
+      localStorage.setItem("loginUserUid", user.uid);
+      localStorage.setItem("username", user.displayName);
+      messageModal("Successfully signed in with Google!");
+      setTimeout(() => {
+        window.location.replace("../dashboard/dashboard.html");
+      }, 3000);
+    } else {
+      await addUserData(user);
+      localStorage.setItem("loginUserUid", user.uid);
+      localStorage.setItem("username", user.displayName);
+      messageModal("Successfully signed up with Google!");
+      setTimeout(() => {
+        window.location.replace("../dashboard/dashboard.html");
+      }, 3000);
+    }
+  } catch (error) {
+    console.error("Google Sign-In Error:", error.message);
+  }
+}
 document.getElementById("forgot-password").addEventListener("click", function () {
     
     window.location.replace('../forgotPass/forget.html')
@@ -68,4 +102,8 @@ var password = document.querySelector('#password').value.trim();
         console.log(error);
        
     }
+});
+
+document.querySelector("#Google-Btn").addEventListener("click", function() {
+  signUpWithGoogle()
 });

@@ -19,22 +19,26 @@
     <div class="form">
         <div class="input-container">
             <i class="fa fa-user"></i>
-            <input type="text" placeholder="Enter your name" id="name-inp">
+            <input type="text" placeholder="Enter your name" id="name-inp" >
+            <p class="error" id="name-error">Invalid name! Only alphabets and spaces allowed (Min: 2 characters).</p>
         </div>
         
         <div class="input-container">
             <i class="fa fa-envelope"></i>
-            <input type="email" placeholder="Enter your email" id="email-inp">
+            <input type="email" placeholder="Enter your email" id="email-inp" >
+            <p class="error" id="email-error">Invalid email format!</p>
         </div>
         
         <div class="input-container">
             <i class="fa fa-phone"></i>
             <input type="tel" placeholder="Enter your phone number" id="phoneNum-inp">
+            <p class="error" id="phoneNum-error">Invalid phone number! </p>
         </div>
         
         <div class="input-container">
             <i class="fa fa-lock"></i>
-            <input type="password" placeholder="Enter your password" id="password-inp">
+            <input type="password" placeholder="Enter your password" id="password-inp" >
+            <p class="error" id="password-error"></p>
         </div>
         
         <button id="signup-btn">Sign Up</button> 

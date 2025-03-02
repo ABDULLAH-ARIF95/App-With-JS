@@ -96,7 +96,7 @@ let getAllPosts = async () => {
   allPostDiv.innerHTML = ""; // Clear existing posts
 
   try {
-    const postsQuery = query(collection(db, "posts"), orderBy('dateOfCreation', 'desc'));
+    const postsQuery = query(collection(db, "posts"), orderBy('dateOfCreation', 'asc'));
     const posts = await getDocs(postsQuery);
 
     for (const post of posts.docs) {

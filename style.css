@@ -167,6 +167,17 @@ button {
     100% { transform: rotate(360deg) scale(1); }
   }
 
+/* Style for the error message */
+.error {
+    display: none; /* Hide by default */
+    color: red;
+    font-size: 10px;
+    margin-top: 0px;
+    margin-left: 2px;
+    text-align: start;
+}
+
+
 /* 🌟 Signin Container */
 .signin-container {
     margin-top: 10px;

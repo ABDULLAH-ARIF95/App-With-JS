@@ -11,6 +11,18 @@ import {
     where
 } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js";
 import {  db } from "../../firebaseConfig.js";
+async function messageModal(messageText) {
+    let message = document.querySelector('#message-p')
+    message.innerText = messageText
+    const modal = document.getElementById("modal-container");
+    modal.style.display = "block";
+  
+    // Hide modal after 2 seconds
+    setTimeout(() => {
+      modal.style.display = "none";
+    }, 3000);
+  }
+  
 // Redirect if user is not logged in
 var loginUserUid = localStorage.getItem("loginUserUid");
 if (!loginUserUid) {
@@ -71,7 +83,7 @@ userData()
     
            console.log('hi');
            
-                // ✅ If user exists, update the first matching document
+                //  If user exists, update the first matching document
                 querySnapshot.forEach(async (docSnap) => {
                     // const userRef = doc(db, "users", docSnap.id);
                     // await updateDoc(userRef, {
@@ -86,12 +98,18 @@ userData()
                             photoURL: data.secure_url,
                         });
                         console.log("yes")
-                        window.location.replace('../myPosts/myPosts.html')
-                    } else {
-                        await updateDoc(doc(db, "users", docSnap.id), {
-                            displayName: username.value,
-                        });
-                        window.location.replace('../myPosts/myPosts.html')
+                        messageModal('Profile Updated Successfuly!')
+                        setTimeout(() => {
+                            window.location.replace('../myPosts/myPosts.html')
+                          }, 3000);
+                        } else {
+                            await updateDoc(doc(db, "users", docSnap.id), {
+                                displayName: username.value,
+                            });
+                            messageModal('Profile Updated Successfuly!')
+                            setTimeout(() => {
+                                window.location.replace('../myPosts/myPosts.html')
+                              }, 3000);
                     }
                 })
          } catch (error) {

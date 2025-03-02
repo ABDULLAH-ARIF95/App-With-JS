@@ -35,9 +35,45 @@ body {
     text-decoration: none;
     cursor: pointer;
     display: block;
-    text-align: center;
-    margin-top: 10px;
+    font-size: 12px;
+    margin-right: 140px;
+    margin-top: -40px;
+    margin-bottom: 0px;
 }
+
+#Google-Btn {
+    background-color: #ffffff;
+    
+    color: #333;
+    border: 2px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s ease-in-out;
+}
+
+#Google-Btn i {
+    font-size: 20px;
+    background: linear-gradient(90deg, #4285F4, #34A853, #FBBC05, #EA4335);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+#Google-Btn:hover {
+    background-color: #f0f0f0;
+}
+
+.google-container{
+    margin-top: 10px;
+    text-align: center;
+}
+
+
 
 .modal {
     display: none;
@@ -171,7 +207,8 @@ button {
     color: #007bff;
     border: 2px solid #007bff;
     width: 50%;
-    margin-top: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 #signin-btn:hover {
@@ -190,6 +227,9 @@ button {
     .form {
         width: 90%;
        
+    }
+    .google-container{
+       font-size: 8px;
     }
     .show-pass  {
         
