@@ -74,34 +74,35 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Google Sign-Up
- async function signUpWithGoogle() {
-   signInWithPopup(auth, provider)
-   .then(async(result) => {
-     const user = result.user;
-      try {
-        const userQuery = query(collection(db, "users"), where("email", '==',user.email));
-         const querySnapshot = await getDocs(userQuery);
-         querySnapshot.forEach((users) => {
-           if (users.data().email === user.email) {
-             localStorage.setItem("loginUserUid", user.uid);
-             localStorage.setItem("username", user.displayName);
-             messageModal("Successfully signed up with Google!")
-             setTimeout(() => {
-               window.location.replace('./pages/dashboard/dashboard.html');
-             }, 3000);
-            return
-           }
-          
-          });
-          await addUserData(user);
-        } catch (error) {
-          console.log(error);
-        }
-    })
-    .catch((error) => {
-      console.error("Google Sign-In Error:", error.message);
-    });
+async function signUpWithGoogle() {
+  try {
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
+
+    const userQuery = query(collection(db, "users"), where("email", "==", user.email));
+    const querySnapshot = await getDocs(userQuery);
+
+    if (!querySnapshot.empty) {
+      localStorage.setItem("loginUserUid", user.uid);
+      localStorage.setItem("username", user.displayName);
+      messageModal("Successfully signed up with Google!");
+      setTimeout(() => {
+        window.location.replace("./pages/dashboard/dashboard.html");
+      }, 3000);
+    } else {
+      await addUserData(user);
+      localStorage.setItem("loginUserUid", user.uid);
+      localStorage.setItem("username", user.displayName);
+      messageModal("Successfully signed up with Google!");
+      setTimeout(() => {
+        window.location.replace("./pages/dashboard/dashboard.html");
+      }, 3000);
+    }
+  } catch (error) {
+    console.error("Google Sign-In Error:", error.message);
+  }
 }
+
 // Email/Password Sign-Up
 let signUpUser = (Email, Password, PhoneNum, Name) => {
   createUserWithEmailAndPassword(auth, Email, Password)

@@ -31,6 +31,7 @@ function messageModal(messageText) {
  let userProfilePic = [] ;
  let userDocid = [] ;
 let userData = async () => {
+  userProfilePic = []
   try {
     const q = query(collection(db, "users"), where("uid", "==", loginUserUid));
     const querySnapshot = await getDocs(q);
@@ -40,6 +41,7 @@ let userData = async () => {
       document.getElementById("username").innerText = doc.data().displayName;
       var profilePic = document.querySelector("#profile-pic");
       userProfilePic.push(doc.data().photoURL)
+      console.log('pf in user data', userProfilePic);
         profilePic.setAttribute("src", doc.data().photoURL);
         console.log(doc.data().photoURL);
       userDocid.push(doc.id)
@@ -76,8 +78,10 @@ let getMyPosts = async () => {
             : false;
            likeCount = post.data().likedBy ? post.data().likedBy.length : 0;
            console.log(post.data());
-           
-            myPostDiv.innerHTML += `
+          
+           console.log( 'pf in getpost data',userProfilePic);
+          
+           myPostDiv.innerHTML += `
             <div class="post">
             <div class="post-head">
             <div class="post-logo">
