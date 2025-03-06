@@ -96,7 +96,7 @@ let getAllPosts = async () => {
   allPostDiv.innerHTML = ""; // Clear existing posts
 
   try {
-    const postsQuery = query(collection(db, "posts"), orderBy('dateOfCreation', 'asc'));
+    const postsQuery = query(collection(db, "posts"), orderBy('dateOfCreation', 'desc'));
     const posts = await getDocs(postsQuery);
 
     for (const post of posts.docs) {
@@ -300,7 +300,7 @@ document
 document
   .querySelector(".goto-profile")
   .addEventListener("click", function () {
-    myProfile();
+    myProfile();    
   });
 var postIcon = document.querySelector(".create-post");
 document.querySelector("#for-post").addEventListener("click", function () {

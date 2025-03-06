@@ -215,15 +215,6 @@ body {
     display: none;
 }
 
-.like-button:hover {
-    color: red;
-    transform: scale(1.1);
-}
-
-.unlike-button:hover {
-    color: darkred;
-    transform: scale(1.1);
-}
 
 /* 🌟 Modal */
 .modal {
@@ -264,6 +255,9 @@ body {
         display: block;
         margin: 10px auto;
     }
+    .img-div{
+        padding-right: 40%;
+    }
 /* Animations */
 @keyframes fadeIn {
     from { opacity: 0; transform: translate(-50%, -55%); }
@@ -287,7 +281,15 @@ body {
         width: 100%;
         padding: 15px;
     }
-
+    #profile-pic {
+        width: 70px; 
+        height: 70px;
+      
+    }
+    .rendering{
+        font-size: small;
+        padding-right: 30px;
+    }
     .post {
         padding: 15px;
     }

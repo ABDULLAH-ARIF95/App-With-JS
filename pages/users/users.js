@@ -1,4 +1,7 @@
 let loginUserUid = localStorage.getItem('loginUserUid')
+if (!loginUserUid) {
+  window.location.replace("../../index.html");
+}
 import {
     collection,
     getDocs,

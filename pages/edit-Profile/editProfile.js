@@ -1,11 +1,12 @@
+// Redirect if user is not logged in
+var loginUserUid = localStorage.getItem("loginUserUid");
+if (!loginUserUid) {
+    window.location.replace("../../index.html");
+}
 import {
     collection,
     getDocs,
     updateDoc,
-    deleteDoc,
-    orderBy,
-    addDoc,
-    getDoc,
     doc,
     query,
     where
@@ -23,11 +24,6 @@ async function messageModal(messageText) {
     }, 3000);
   }
   
-// Redirect if user is not logged in
-var loginUserUid = localStorage.getItem("loginUserUid");
-if (!loginUserUid) {
-    window.location.replace("../../index.html");
-}
 var profilePic = document.querySelector("#profileImage");
 var username = document.querySelector("#username");
 let userData = async () => {
