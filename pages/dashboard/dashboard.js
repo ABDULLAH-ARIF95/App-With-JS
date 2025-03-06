@@ -309,3 +309,26 @@ document.querySelector("#for-post").addEventListener("click", function () {
 document.querySelector("#cancel-btn").addEventListener("click", function () {
   postIcon.style.display = "none";
 });
+//friend button event listeners 
+document.querySelector("#chat-btn").addEventListener("click", function () {
+window.location.replace('.././friends/chats/chat.html')
+ 
+});
+document.querySelector("#friend-btn").addEventListener("click", function () {
+window.location.replace('.././friends/friends/friends.html')
+ 
+});
+document.querySelector("#friendRequest-btn").addEventListener("click", function () {
+window.location.replace('.././friends/friendRequest/friendRequest.html')
+ 
+});
+
+document.getElementById("friends-btn").addEventListener("click", function () {
+  document.getElementById("friends-dropdown").classList.toggle("show");
+});
+
+window.addEventListener("click", function (e) {
+  if (!document.getElementById("friends-btn").contains(e.target) && !document.getElementById("friends-dropdown").contains(e.target)) {
+      document.getElementById("friends-dropdown").classList.remove("show");
+  }
+});

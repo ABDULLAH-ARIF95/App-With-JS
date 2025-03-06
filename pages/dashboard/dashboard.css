@@ -218,7 +218,7 @@ body {
     color: #333;
     line-height: 1.5;
 }
-#signout-btn ,#my-profile-btn,#for-post {
+#signout-btn ,#my-profile-btn,#for-post,#friends-btn {
     border: none;
     padding: 10px 15px;
     font-size: 16px;
@@ -230,7 +230,7 @@ body {
     gap: 8px;
 }
 
-#signout-btn:hover,#my-profile-btn:hover,#for-post:hover {
+#signout-btn:hover,#my-profile-btn:hover,#for-post:hover,#friends-btn:hover {
     background-color: red;
     color: white;
     transform: scale(1.05);
@@ -276,7 +276,32 @@ body {
     animation: rotateScale 0.6s ease-in-out forwards;
   }
   
-  
+  .dropdown {
+    display: none;
+    position: absolute;
+    top: 80px;
+    right: 80px;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    overflow: hidden;
+    flex-direction: column;
+}
+.dropdown a {
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background 0.3s ease;
+}
+.dropdown a:hover {
+    background: #f0f0f0;
+}
+.show {
+    display: flex;
+}
   /* Animations */
   @keyframes fadeIn {
       from { opacity: 0; transform: translate(-50%, -55%); }
@@ -308,10 +333,17 @@ body {
     .navbar{
         width: 100%;
     }
-    #signout-btn ,#my-profile-btn,#for-post{
-        font-size: 12px;
+    #signout-btn ,#my-profile-btn,#for-post,#friends-btn{
+        font-size: 10px;
+        margin: 0%;
+        
     }
     .left-section span {
         display: none;
+    }
+    .dropdown {
+    top: 80px;
+    right: 50px;
+    font-size: 10px;
     }
 }
