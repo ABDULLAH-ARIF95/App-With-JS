@@ -9,6 +9,8 @@ import {
     orderBy,
     onSnapshot,
     getDoc,
+    addDoc,
+    deleteDoc,
     doc,
     query,
     where
@@ -21,17 +23,34 @@ document.querySelector('#back').addEventListener('click',function(){
 })
 let userProfilePic = []
 var freindRequestBtn = document.querySelector('#friend-request-btn')
+var cancelRequestBtn = document.querySelector('.cancel-request')
+var confirmRequestBtn = document.querySelector('.accept-request')
+var rejectRequestBtn = document.querySelector('.reject-request')
+
 var freindsBtn = document.querySelector('.friends-btn')
+freindsBtn.style.display = 'none'
 let username = []
 var friendsNum = document.querySelector('#friends-count')
-var friendCount;
 let userData = async () => {
     try {
       const q = query(collection(db, "users"), where("uid", "==", userUid));
       const querySnapshot = await getDocs(q);
-  
+
+      let q2 = query(collection(db, "friend_requests"),where('from','==',userUid),where('to','==',loginUserUid))
+      let  querySnapshot2 = await getDocs(q2)
+      querySnapshot2.forEach(async (requestDoc) => {
+     console.log(requestDoc.data());
+     console.log(requestDoc.data().from===userUid);
+     if (requestDoc.data().from===userUid) {
+      confirmRequestBtn.style.display = 'block'
+      rejectRequestBtn.style.display = 'block'
+      freindRequestBtn.style.display = 'none'
+     }
+      })
       querySnapshot.forEach(async (doc) => {
-        if (doc.data().friends) {
+        console.log(doc.data().friends===loginUserUid);
+        
+        if (doc.data().friends===loginUserUid){
           // friendCount = doc.data().friends.length
           friendsNum.innerHTML = doc.data().friends.length
           freindRequestBtn.style.display = 'none'
@@ -73,9 +92,9 @@ let userData = async () => {
           });
           console.log("Document written with ID:", docRef.id);
           
-          messageModal('Friend Request Sent')
-          // event.style.display = "none" 
-          // event.nextElementSibling.style.display = "block" 
+          // messageModal('Friend Request Sent')
+          freindRequestBtn.style.display = "none" 
+          freindRequestBtn.nextElementSibling.style.display = "block" 
           
         } catch (error) {
           console.error("Error creating post:", error);
@@ -88,14 +107,16 @@ let userData = async () => {
      let  querySnapshot = await getDocs(q)
      querySnapshot.forEach(async (requestDoc) => {
       await deleteDoc(doc(db, "friend_requests", requestDoc.id));
-      messageModal('Cancelled Request!')
-      // event.style.display = "none" 
+      // messageModal('Cancelled Request!')
+      cancelRequestBtn.style.display = "none" 
       // console.log(event.previousElementSibling);
       
-      // event.previousElementSibling.style.display = "block" 
+      cancelRequestBtn.previousElementSibling.style.display = "block" 
       // console.log("Friend request deleted:", requestDoc.id);
     });
   }
+  let loginUserFriendsArr = [];
+let requestedUserFriendsArr = [];
   async function confirmRequest(userUid) {
     try {
       // 🔹 Query the logged-in user's document
@@ -151,21 +172,32 @@ let userData = async () => {
               
               
               
+              confirmRequestBtn.style.display = 'none'
+              rejectRequestBtn.style.display = 'none'
+              freindsBtn.style.display = 'block'
+              // messageModal("Request Accepted!");
               
-          messageModal("Request Accepted!");
-  
       } catch (error) {
-          console.error("Error in confirmRequest:", error);
+        console.error("Error in confirmRequest:", error);
       }
-  }
-  
-  async function deleteRequest(userUid) {
-    let q = query(collection(db, "friend_requests"),where('from','==',userUid),where('to','==',loginUserUid));
-      onSnapshot(q, (querySnapshot) => {
-        querySnapshot.forEach(async (requestDoc) => {
-          await deleteDoc(doc(db, "friend_requests", requestDoc.id));
+    }
+    
+    async function deleteRequest(userUid) {
+      try {
+        let q = query(collection(db, "friend_requests"),where('from','==',userUid),where('to','==',loginUserUid));
+        onSnapshot(q, (querySnapshot) => {
+          querySnapshot.forEach(async (requestDoc) => {
+            await deleteDoc(doc(db, "friend_requests", requestDoc.id));
           });
-      })
+        })
+        confirmRequestBtn.style.display = 'none'
+        rejectRequestBtn.style.display = 'none'
+        freindRequestBtn.style.display = 'block'
+      } catch (error) {
+        console.log(error);
+        
+      }
+     
   }
   
   document.querySelector(".send-request").addEventListener("click",function () {
@@ -186,14 +218,17 @@ let userData = async () => {
       });
       //working here
       
+console.log(userProfilePic[0]);
 
-  let getPosts = async () => {
-      try {
-          const q = query(collection(db, "posts"), where("uid", "==", userUid,orderBy('dateOfCreation','desc')));
-          const querySnapshot = await getDocs(q);
-         
-          getUserPosts.innerHTML = ""; // Clear previous posts
-          
+let getPosts = async () => {
+  
+  try {
+    await userData()
+    const q = query(collection(db, "posts"), where("uid", "==", userUid,orderBy('dateOfCreation','desc')));
+    const querySnapshot = await getDocs(q);
+    
+    getUserPosts.innerHTML = ""; // Clear previous posts
+    
           if (querySnapshot.empty) {
               getUserPosts.innerHTML = `<p class="no-posts-message">No Posts!</p>`;
               return
@@ -204,20 +239,22 @@ let userData = async () => {
               var likesArr =  post.data().likedBy
               ? post.data().likedBy.includes(loginUserUid) 
               : false;
-             likeCount = post.data().likedBy ? post.data().likedBy.length : 0;
-             console.log(post.data());
-             postCount++
+              likeCount = post.data().likedBy ? post.data().likedBy.length : 0;
+              console.log(post.data());
+              console.log(userProfilePic[0],username);
+              
+              postCount++
               getUserPosts.innerHTML += `
               <div class="post">
               <div class="post-head">
               <div class="post-logo">
               <img src="${userProfilePic[0]}">
-              <span class="user-name">${username}</span>
+              <span class="user-name">${username[0]}</span>
               </div>
-        </div>
-      <p id='p-text'>${post.data().postText}</p>
-        <div class='footer'>
-                     <div style='display:flex'>
+              </div>
+              <p id='p-text'>${post.data().postText}</p>
+              <div class='footer'>
+              <div style='display:flex'>
                     <button class='like-button' id='${post.id}' style='display:${likesArr ? "none" : "block"}'> 
                     <i class="fa-regular fa-heart"></i>
                     </button>
@@ -227,21 +264,21 @@ let userData = async () => {
                     </button>
                      <p style='margin-left:2px;margin-top:14px;font-size:large;font-weight:500 '>${likeCount}</p>
                      </div>
-                    <p class='posted-on' > ${post.data().dateOfCreation}</p>
-                    
-    </div>
-  `;
-              
-          });
+                     <p class='posted-on' > ${post.data().dateOfCreation}</p>
+                     
+                     </div>
+                     `;
+                     
+                    });
   
           // Add event listeners after posts are rendered
           document.querySelectorAll(".like-button").forEach((btn) => {
-              btn.addEventListener("click", (event) => {
-                let postId = event.currentTarget.id;
-                likeFun(postId, event.currentTarget);
-              });
+            btn.addEventListener("click", (event) => {
+              let postId = event.currentTarget.id;
+              likeFun(postId, event.currentTarget);
             });
-        
+            });
+            
             document.querySelectorAll(".unlike-button").forEach((btn) => {
               btn.addEventListener("click", (event) => {
                 let postId = event.currentTarget.id;
@@ -249,7 +286,7 @@ let userData = async () => {
               });
             });
             postsNum.innerHTML= postCount 
-      } catch (error) {
+          } catch (error) {
           console.error("Error fetching posts:", error);
       }
   };

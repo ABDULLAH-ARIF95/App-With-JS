@@ -35,8 +35,9 @@ async function fetchUsers(){
         
         let isRequested  = false;
         var requestArr = [] ;
-        const queryRequest = query(collection(db, "friend_requests"),where('from' ,'==',loginUserUid))
-        const check = await getDocs(queryRequest);
+        onSnapshot(query(collection(db, "friend_requests"), where('from', '==', loginUserUid)), (check) => {
+            // const queryRequest = query(collection(db, "friend_requests"),where('from' ,'==',loginUserUid))
+            // const check = await getDocs(queryRequest);
         check.forEach(async requests => {
             if ( requests.data().to ) { 
                 requestArr.push(requests.data().to);
@@ -45,14 +46,21 @@ async function fetchUsers(){
             console.log(requests.data());
             // isRequested.push()
         })
-        console.log(isRequested);
-        
-        const queryUsers = query(collection(db, "users"),where('uid' ,'!=',loginUserUid))
-        const querySnapshot = await getDocs(queryUsers);
+    })
+    console.log(isRequested);
+    
+    // const queryUsers = query(collection(db, "users"),where('uid' ,'!=',loginUserUid))
+    // const querySnapshot = await getDocs(queryUsers);
+    onSnapshot(query(collection(db, "users"), where('uid', '!=', loginUserUid)), (querySnapshot) => {
+        usersDiv.innerHTML = ''
         querySnapshot.forEach(async user => {
+           
             console.log(user.id, user.data());
             usersArr.push(user.data())
             let isFriend  = false ;
+            
+            console.log(user.data().friends);
+            
            
             
             if (user.data().friends) {
@@ -74,7 +82,7 @@ async function fetchUsers(){
         
         try {
             usersDiv.innerHTML += `
-            <div class="user-card"  >
+            <div class="user-card"  style='display:${isFriend? "none" : "block"}'>
             <div class ="image " id="${user.data().uid}">
             <img src="${user.data().photoURL}" alt="Profile" >
             </div>
@@ -114,6 +122,7 @@ async function fetchUsers(){
             
         }
     })
+})
 } catch (error) {
     console.log(error);
     
@@ -202,13 +211,16 @@ document.getElementById("search-user").addEventListener("input", function () {
 var freindRequestsDiv = document.querySelector('.friend-requests')
 async function getFriendRequests() {
     freindRequestsDiv.innerHTML = ''
-    const queryfriendRequest = query(collection(db, "friend_requests"),where('to' ,'==',loginUserUid))
-    const check = await getDocs(queryfriendRequest);
-    check.forEach(async requests => {
+    // const queryfriendRequest = query(collection(db, "friend_requests"),where('to' ,'==',loginUserUid))
+    // const check = await getDocs(queryfriendRequest);
+    onSnapshot(query(collection(db, "friend_requests"), where('to', '==', loginUserUid)), (check) => {
+        freindRequestsDiv.innerHTML = ''
+    check.forEach(requests => {
         console.log(requests.data());
-        const queryUsers = query(collection(db, "users"),where('uid' ,'==',requests.data().from))
-    const querySnapshot = await getDocs(queryUsers);
-    querySnapshot.forEach(async user => {
+    //     const queryUsers = query(collection(db, "users"),where('uid' ,'==',requests.data().from))
+    // const querySnapshot = await getDocs(queryUsers);
+    onSnapshot(query(collection(db, "users"), where('uid', '==', requests.data().from)), (querySnapshot) => {
+    querySnapshot.forEach( user => {
 
         freindRequestsDiv.innerHTML += `
          <div class="request">
@@ -247,6 +259,8 @@ async function getFriendRequests() {
             
         })
     })
+})
+})
         
     })
     
@@ -254,6 +268,7 @@ async function getFriendRequests() {
 getFriendRequests()
 let loginUserFriendsArr = [];
 let requestedUserFriendsArr = [];
+
 
 async function confirmRequest(userUid) {
     try {
