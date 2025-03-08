@@ -7,6 +7,7 @@ import {
     getDocs,
     updateDoc,
     orderBy,
+    onSnapshot,
     getDoc,
     doc,
     query,
@@ -16,16 +17,27 @@ import { auth, db } from "../../firebaseConfig.js";
 let userUid = localStorage.getItem('inspectedUserUid')
 console.log(userUid);
 document.querySelector('#back').addEventListener('click',function(){
-    window.location.replace('../dashboard/dashboard.html')
+  window.location.replace('../dashboard/dashboard.html')
 })
 let userProfilePic = []
+var freindRequestBtn = document.querySelector('#friend-request-btn')
+var freindsBtn = document.querySelector('.friends-btn')
 let username = []
+var friendsNum = document.querySelector('#friends-count')
+var friendCount;
 let userData = async () => {
     try {
       const q = query(collection(db, "users"), where("uid", "==", userUid));
       const querySnapshot = await getDocs(q);
   
       querySnapshot.forEach(async (doc) => {
+        if (doc.data().friends) {
+          // friendCount = doc.data().friends.length
+          friendsNum.innerHTML = doc.data().friends.length
+          freindRequestBtn.style.display = 'none'
+          freindsBtn.style.display = 'flex'
+          console.log('friends',doc.data().friends.length);
+        }
         console.log("doc.data() =>", doc.data());
         // var username =  document.querySelector("#profile-pic");
         document.getElementById("username").innerHTML = doc.data().displayName;
@@ -36,7 +48,6 @@ let userData = async () => {
           console.log(doc.data().photoURL);
         userProfilePic.push(doc.data().photoURL)
           console.log(doc.id);
-  
       });
       
       // userDataArr.push(doc.data())
@@ -49,6 +60,133 @@ let userData = async () => {
   var postCount =  0
   var postsNum = document.querySelector('#post-count')
   var likeCount;
+  //working here
+  async function sendFriendRequest(userId) {
+    console.log("working");
+    
+    try {
+      console.log("Firestore DB:", db);
+      
+      const docRef = await addDoc(collection(db, "friend_requests"), {
+        from:loginUserUid,
+           to:userId,
+          });
+          console.log("Document written with ID:", docRef.id);
+          
+          messageModal('Friend Request Sent')
+          // event.style.display = "none" 
+          // event.nextElementSibling.style.display = "block" 
+          
+        } catch (error) {
+          console.error("Error creating post:", error);
+        }
+        
+      }
+      async function cancelRequest(userId) {
+        console.log("working");
+        let q = query(collection(db, "friend_requests"),where('from','==',loginUserUid),where('to','==',userId))
+     let  querySnapshot = await getDocs(q)
+     querySnapshot.forEach(async (requestDoc) => {
+      await deleteDoc(doc(db, "friend_requests", requestDoc.id));
+      messageModal('Cancelled Request!')
+      // event.style.display = "none" 
+      // console.log(event.previousElementSibling);
+      
+      // event.previousElementSibling.style.display = "block" 
+      // console.log("Friend request deleted:", requestDoc.id);
+    });
+  }
+  async function confirmRequest(userUid) {
+    try {
+      // 🔹 Query the logged-in user's document
+      let queryLoginUser = query(collection(db, "users"), where("uid", "==", loginUserUid));
+      const snapshot = await getDocs(queryLoginUser);
+      
+          if (!snapshot.empty) {
+            const userDoc = snapshot.docs[0]; // Get the document snapshot
+              const userDocRef = userDoc.ref; // Get the document reference
+              const userData = userDoc.data(); // Get user data
+              
+              // 🔹 Update the logged-in user's friends array
+              loginUserFriendsArr = userData.friends
+                  ? [userUid, ...userData.friends]
+                  : [userUid];
+  
+              await updateDoc(userDocRef, {
+                  friends: loginUserFriendsArr
+                });
+              } else {
+                console.error("Logged-in user document not found.");
+                return;
+          }
+  
+          // 🔹 Query the requested user's document
+          let queryRequestedUser = query(collection(db, "users"), where("uid", "==", userUid));
+          const inSnapshot = await getDocs(queryRequestedUser);
+  
+          if (!inSnapshot.empty) {
+              const requestedUserDoc = inSnapshot.docs[0]; // Get document snapshot
+              const requestedUserDocRef = requestedUserDoc.ref; // Get reference
+              const requestedUserData = requestedUserDoc.data(); // Get user data
+  
+              // 🔹 Update the requested user's friends array
+              requestedUserFriendsArr = requestedUserData.friends
+                  ? [loginUserUid, ...requestedUserData.friends]
+                  : [loginUserUid];
+                  
+              await updateDoc(requestedUserDocRef, {
+                friends: requestedUserFriendsArr
+              });
+            } else {
+              console.error("Requested user document not found.");
+              return;
+            }
+            
+            let q = query(collection(db, "friend_requests"),where('from','==',userUid),where('to','==',loginUserUid));
+            onSnapshot(q, (querySnapshot) => {
+              querySnapshot.forEach(async (requestDoc) => {
+                  await deleteDoc(doc(db, "friend_requests", requestDoc.id));
+                });
+              })
+              
+              
+              
+              
+          messageModal("Request Accepted!");
+  
+      } catch (error) {
+          console.error("Error in confirmRequest:", error);
+      }
+  }
+  
+  async function deleteRequest(userUid) {
+    let q = query(collection(db, "friend_requests"),where('from','==',userUid),where('to','==',loginUserUid));
+      onSnapshot(q, (querySnapshot) => {
+        querySnapshot.forEach(async (requestDoc) => {
+          await deleteDoc(doc(db, "friend_requests", requestDoc.id));
+          });
+      })
+  }
+  
+  document.querySelector(".send-request").addEventListener("click",function () {
+        sendFriendRequest(userUid);
+        
+    });
+    document.querySelector(".accept-request").addEventListener("click",function () {
+      confirmRequest(userUid);
+      
+    });
+  document.querySelector(".reject-request").addEventListener("click",function () {
+        deleteRequest(userUid);
+        
+      });
+      document.querySelector(".cancel-request").addEventListener("click",function () {
+        cancelRequest(userUid);
+        
+      });
+      //working here
+      
+
   let getPosts = async () => {
       try {
           const q = query(collection(db, "posts"), where("uid", "==", userUid,orderBy('dateOfCreation','desc')));
@@ -59,8 +197,8 @@ let userData = async () => {
           if (querySnapshot.empty) {
               getUserPosts.innerHTML = `<p class="no-posts-message">No Posts!</p>`;
               return
-          }
-          querySnapshot.forEach((post) => {
+            }
+            querySnapshot.forEach((post) => {
               console.log(post.id, post.data());
               
               var likesArr =  post.data().likedBy

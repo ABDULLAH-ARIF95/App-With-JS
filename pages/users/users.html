@@ -27,17 +27,22 @@
        <div class="rendering" style="margin-top: 10%;display: flex;gap: 40%; margin-right: 30%;">
        <div style="text-align: center;">
         <strong>Posts</strong>
-        <p id="post-count"></p>
+        <p id="post-count">0</p>
        </div>
        <div style="text-align: center;">
-        <strong>Friends</strong>
-        <p>0</p>
+        <strong >Friends</strong>
+        <p id="friends-count">0</p>
        </div>
       </div>
       </div>
-      <button id="friend-request-btn">
+      <button id="friend-request-btn" class="send-request">
         <i class="fa-solid fa-user-plus"></i> Send Friend Request
     </button>
+    <button class="friends-btn"><i class="fa fa-user-friends" ></i> Friends</button>
+    <button class="accept-request"><i class="fa fa-check"></i> Accept</button>
+<button class="reject-request"><i class="fa fa-times"></i> Reject</button>
+<button class="cancel-request"><i class="fa fa-user-times"></i> Cancel Request</button>
+
     
     </div>
    <div class="getPosts"></div>

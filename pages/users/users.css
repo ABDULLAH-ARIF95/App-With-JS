@@ -269,6 +269,78 @@ body {
     50% { transform: rotate(180deg) scale(1.2); opacity: 1; }
     100% { transform: rotate(360deg) scale(1); }
 }
+.friends-btn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    margin-left: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    background-color: #42b72a; /* Green like Facebook's "Friends" button */
+    color: white;
+}
+
+.friends-btn i {
+    font-size: 16px;
+}
+/* General Button Styling */
+button {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px; /* Space between icon and text */
+}
+
+/* Cancel Friend Request Button */
+.cancel-request {
+    display: none;
+    background-color: #ff4d4d; /* Red */
+    color: white;
+}
+
+.cancel-request:hover {
+    background-color: #cc0000; /* Darker red */
+}
+
+/* Reject Friend Request Button */
+.reject-request {
+    display: none;
+    background-color: #999; /* Gray */
+    color: white;
+}
+
+.reject-request:hover {
+    background-color: #666; /* Darker Gray */
+}
+
+/* Accept Friend Request Button */
+.accept-request {
+    display: none;
+    background-color: #4CAF50; /* Green */
+    color: white;
+}
+
+.accept-request:hover {
+    background-color: #388E3C; /* Darker Green */
+}
+
+/* Icon Styling (Optional, for better alignment) */
+button i {
+    font-size: 16px;
+}
 
 /* 🌟 Responsive Design */
 @media (max-width: 768px) {

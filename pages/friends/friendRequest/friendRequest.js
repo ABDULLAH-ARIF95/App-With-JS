@@ -52,7 +52,7 @@ async function fetchUsers(){
         querySnapshot.forEach(async user => {
             console.log(user.id, user.data());
             usersArr.push(user.data())
-            let isFriend ;
+            let isFriend  = false ;
            
             
             if (user.data().friends) {
@@ -70,6 +70,8 @@ async function fetchUsers(){
         else{
             isRequested = false
         }
+        console.log(isFriend);
+        
         try {
             usersDiv.innerHTML += `
             <div class="user-card"  >
@@ -79,9 +81,10 @@ async function fetchUsers(){
             <div class="info">
             <span>${user.data().displayName}</span>  
             </div>
-            <button class="send-request"  id="${user.data().uid}" style='display:${isRequested? "none" : "block"}||${isFriend!=undefined? "none" : "block"}'>  <i class="fa fa-user-plus"></i> Send Request</button>
-            <button class="cancel-request" id="${user.data().uid}" style='display:${isRequested? "block" : "none"}||${isFriend!=undefined? "none" : "block"}'> <i class="fa fa-user-times"></i> Cancel Request</button>
-             <button class="friends-btn"><i class="fa fa-user-friends" style='display:${isFriend? "none" : "block"}'></i> Friends</button>
+            
+            <button class="send-request"  id="${user.data().uid}"  style='display:${isFriend ? "none" : (isRequested ? "none" : "block")}'>  <i class="fa fa-user-plus"></i> Send Request</button>
+            <button class="cancel-request" id="${user.data().uid}" style='display:${isFriend ? "none" : (isRequested ? "block" : "none")}'> <i class="fa fa-user-times"></i> Cancel Request</button>
+             <button class="friends-btn" style='display:${isFriend? "block" : "none"}'><i class="fa fa-user-friends" ></i> Friends</button>
             </div>
             `
             document.querySelectorAll(".image").forEach((btn) => {
