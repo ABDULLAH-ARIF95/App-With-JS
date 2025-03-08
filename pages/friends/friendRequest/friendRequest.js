@@ -10,6 +10,7 @@ import {
   where,
   deleteDoc,
   updateDoc,
+  onSnapshot,
   getDoc,
   doc,
   orderBy,
@@ -30,27 +31,38 @@ var usersDiv = document.querySelector('.users-list')
 var usersArr = []
 async function fetchUsers(){
     usersDiv.innerHTML = ''
-try {
-    
-    let isRequested  = false;
-    var requestArr = [] ;
-    const queryRequest = query(collection(db, "friend_requests"),where('from' ,'==',loginUserUid))
-    const check = await getDocs(queryRequest);
-    check.forEach(async requests => {
-        if ( requests.data().to ) { 
-            requestArr.push(requests.data().to);
-        }
+    try {
         
-        console.log(requests.data());
-        // isRequested.push()
-    })
-    console.log(isRequested);
-    
-    const queryUsers = query(collection(db, "users"),where('uid' ,'!=',loginUserUid))
-    const querySnapshot = await getDocs(queryUsers);
-    querySnapshot.forEach(async user => {
-        console.log(user.id, user.data());
-        usersArr.push(user.data())
+        let isRequested  = false;
+        var requestArr = [] ;
+        const queryRequest = query(collection(db, "friend_requests"),where('from' ,'==',loginUserUid))
+        const check = await getDocs(queryRequest);
+        check.forEach(async requests => {
+            if ( requests.data().to ) { 
+                requestArr.push(requests.data().to);
+            }
+            
+            console.log(requests.data());
+            // isRequested.push()
+        })
+        console.log(isRequested);
+        
+        const queryUsers = query(collection(db, "users"),where('uid' ,'!=',loginUserUid))
+        const querySnapshot = await getDocs(queryUsers);
+        querySnapshot.forEach(async user => {
+            console.log(user.id, user.data());
+            usersArr.push(user.data())
+            let isFriend ;
+           
+            
+            if (user.data().friends) {
+                var userFriendsArr = user.data().friends
+            
+            isFriend = userFriendsArr.includes(loginUserUid)
+                
+            }
+       
+        
         if (requestArr.includes(user.data().uid) ) {
             isRequested = true
             
@@ -67,9 +79,9 @@ try {
             <div class="info">
             <span>${user.data().displayName}</span>  
             </div>
-            <button class="send-request"  id="${user.data().uid}" style='display:${isRequested? "none" : "block"}'>  <i class="fa fa-user-plus"></i> Send Request</button>
-            <button class="cancel-request" id="${user.data().uid}" style='display:${isRequested? "block" : "none"}'> <i class="fa fa-user-times"></i> Cancel Request</button>
-             <button class="friends-btn"><i class="fa fa-user-friends"></i> Friends</button>
+            <button class="send-request"  id="${user.data().uid}" style='display:${isRequested? "none" : "block"}||${isFriend!=undefined? "none" : "block"}'>  <i class="fa fa-user-plus"></i> Send Request</button>
+            <button class="cancel-request" id="${user.data().uid}" style='display:${isRequested? "block" : "none"}||${isFriend!=undefined? "none" : "block"}'> <i class="fa fa-user-times"></i> Cancel Request</button>
+             <button class="friends-btn"><i class="fa fa-user-friends" style='display:${isFriend? "none" : "block"}'></i> Friends</button>
             </div>
             `
             document.querySelectorAll(".image").forEach((btn) => {
@@ -172,7 +184,7 @@ document.getElementById("search-user").addEventListener("input", function () {
     
     }
     async function cancelRequest(event,userId) {
-        let q = query(collection(db, "friend_requests"),where('from','==',loginUserUid),where('to','==',userId))
+   let q = query(collection(db, "friend_requests"),where('from','==',loginUserUid),where('to','==',userId))
    let  querySnapshot = await getDocs(q)
    querySnapshot.forEach(async (requestDoc) => {
     await deleteDoc(doc(db, "friend_requests", requestDoc.id));
@@ -224,6 +236,13 @@ async function getFriendRequests() {
             });
             
         })
+        document.querySelectorAll(".delete").forEach((btn) => {
+            btn.addEventListener("click", (event) => {
+                deleteRequest(event.currentTarget.id);
+                
+            });
+            
+        })
     })
         
     })
@@ -259,10 +278,10 @@ async function confirmRequest(userUid) {
 
         // 🔹 Query the requested user's document
         let queryRequestedUser = query(collection(db, "users"), where("uid", "==", userUid));
-        const onSnapshot = await getDocs(queryRequestedUser);
+        const inSnapshot = await getDocs(queryRequestedUser);
 
-        if (!onSnapshot.empty) {
-            const requestedUserDoc = onSnapshot.docs[0]; // Get document snapshot
+        if (!inSnapshot.empty) {
+            const requestedUserDoc = inSnapshot.docs[0]; // Get document snapshot
             const requestedUserDocRef = requestedUserDoc.ref; // Get reference
             const requestedUserData = requestedUserDoc.data(); // Get user data
 
@@ -279,34 +298,28 @@ async function confirmRequest(userUid) {
             return;
         }
 
-        // 🔹 Delete friend request from Firestore
-        let q = query(
-            collection(db, "friend_requests"),
-            where("from", "==", loginUserUid),
-            where("to", "==", userUid)
-        );
-        console.log('hi');
-        let querySnapshot = await getDocs(q);
-        console.log(querySnapshot);
-        const requestDoc = querySnapshot.docs[0]; // Get the first matching document
-            // console.log(requestDoc.id);
-            // console.log(requestDoc.ref);
-            console.log('hi');
+        let q = query(collection(db, "friend_requests"),where('from','==',userUid),where('to','==',loginUserUid));
+        onSnapshot(q, (querySnapshot) => {
+            querySnapshot.forEach(async (requestDoc) => {
+                await deleteDoc(doc(db, "friend_requests", requestDoc.id));
+            });
+        })
         
-            await deleteDoc(requestDoc.ref); // Correct way to delete the document
 
-        // messageModal("Request Accepted!");
+        
+
+        messageModal("Request Accepted!");
 
     } catch (error) {
         console.error("Error in confirmRequest:", error);
     }
 }
 
-async function deleteRequest(button) {
-    let q = query(collection(db, "friend_requests"),where('from','==',loginUserUid),where('to','==',userId))
-    let  querySnapshot = await getDocs(q)
-    querySnapshot.forEach(async (requestDoc) => {
-     await deleteDoc(doc(db, "friend_requests", requestDoc.id));
-     messageModal('Cancelled Request!')
+async function deleteRequest(userUid) {
+    let q = query(collection(db, "friend_requests"),where('from','==',userUid),where('to','==',loginUserUid));
+    onSnapshot(q, (querySnapshot) => {
+        querySnapshot.forEach(async (requestDoc) => {
+            await deleteDoc(doc(db, "friend_requests", requestDoc.id));
+        });
     })
 }
