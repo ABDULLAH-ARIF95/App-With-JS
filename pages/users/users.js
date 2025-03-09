@@ -46,7 +46,18 @@ let userData = async () => {
       rejectRequestBtn.style.display = 'block'
       freindRequestBtn.style.display = 'none'
      }
-      })
+    })
+    let query3 = query(collection(db, "friend_requests"),where('from','==',loginUserUid),where('to','==',userUid))
+    let  querySnapshot3 = await getDocs(query3)
+    querySnapshot3.forEach(async (requestDocs) => {
+   //  requestDocs.forEach(async (doc) => {
+      console.log(requestDocs.data().from);
+      if (requestDocs.data().from===loginUserUid) {
+        freindRequestBtn.style.display = 'none'
+        cancelRequestBtn.style.display = 'block'
+      }
+    })
+    
       querySnapshot.forEach(async (doc) => {
         console.log(doc.data().friends===loginUserUid);
         
