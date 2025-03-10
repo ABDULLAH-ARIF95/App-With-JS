@@ -190,23 +190,23 @@ document.getElementById("search-user").addEventListener("input", function () {
         event.style.display = "none" 
         event.nextElementSibling.style.display = "block" 
         
-      } catch (error) {
+    } catch (error) {
         console.error("Error creating post:", error);
-      }
-    
     }
-    async function cancelRequest(event,userId) {
-   let q = query(collection(db, "friend_requests"),where('from','==',loginUserUid),where('to','==',userId))
-   let  querySnapshot = await getDocs(q)
-   querySnapshot.forEach(async (requestDoc) => {
-    await deleteDoc(doc(db, "friend_requests", requestDoc.id));
-    messageModal('Cancelled Request!')
-    event.style.display = "none" 
-    console.log(event.previousElementSibling);
     
-    event.previousElementSibling.style.display = "block" 
-    console.log("Friend request deleted:", requestDoc.id);
-});
+}
+async function cancelRequest(event,userId) {
+    let q = query(collection(db, "friend_requests"),where('from','==',loginUserUid),where('to','==',userId))
+    let  querySnapshot = await getDocs(q)
+    querySnapshot.forEach(async (requestDoc) => {
+        await deleteDoc(doc(db, "friend_requests", requestDoc.id));
+        messageModal('Cancelled Request!')
+        event.style.display = "none" 
+        console.log(event.previousElementSibling);
+        
+        event.previousElementSibling.style.display = "block" 
+        console.log("Friend request deleted:", requestDoc.id);
+    });
 }
 var freindRequestsDiv = document.querySelector('.friend-requests')
 async function getFriendRequests() {
@@ -215,55 +215,55 @@ async function getFriendRequests() {
     // const check = await getDocs(queryfriendRequest);
     onSnapshot(query(collection(db, "friend_requests"), where('to', '==', loginUserUid)), (check) => {
         freindRequestsDiv.innerHTML = ''
-    check.forEach(requests => {
-        console.log(requests.data());
-    //     const queryUsers = query(collection(db, "users"),where('uid' ,'==',requests.data().from))
-    // const querySnapshot = await getDocs(queryUsers);
-    onSnapshot(query(collection(db, "users"), where('uid', '==', requests.data().from)), (querySnapshot) => {
-    querySnapshot.forEach( user => {
-
-        freindRequestsDiv.innerHTML += `
-         <div class="request">
-         <div class="image" id="${user.data().uid}">
-         <img src="${user.data().photoURL}" alt="Profile">
-         </div>
-         <div class="info">
-                        <span>${user.data().displayName}</span>
+        check.forEach(requests => {
+            console.log(requests.data());
+            //     const queryUsers = query(collection(db, "users"),where('uid' ,'==',requests.data().from))
+            // const querySnapshot = await getDocs(queryUsers);
+            onSnapshot(query(collection(db, "users"), where('uid', '==', requests.data().from)), (querySnapshot) => {
+                querySnapshot.forEach( user => {
+                    
+                    freindRequestsDiv.innerHTML += `
+                    <div class="request">
+                    <div class="image" id="${user.data().uid}">
+                    <img src="${user.data().photoURL}" alt="Profile">
+                    </div>
+                    <div class="info">
+                    <span>${user.data().displayName}</span>
                     </div>
                     
                     <button class="confirm" id="${user.data().uid}" >Confirm</button>
                     <button class="delete" id="${user.data().uid}">Delete</button>
-                   
-                </div>
-            </div>
-        `
-        document.querySelectorAll(".image").forEach((btn) => {
-            btn.addEventListener("click", (event) => {
-                inspectedUser(event.currentTarget.id);
-                
-            });
-            
-        })
-        document.querySelectorAll(".confirm").forEach((btn) => {
-            btn.addEventListener("click", (event) => {
-                confirmRequest(event.currentTarget.id);
-                
-            });
-            
-        })
-        document.querySelectorAll(".delete").forEach((btn) => {
-            btn.addEventListener("click", (event) => {
-                deleteRequest(event.currentTarget.id);
-                
-            });
-            
-        })
-    })
+                    
+                    </div>
+                    </div>
+                    `
+                    document.querySelectorAll(".image").forEach((btn) => {
+                        btn.addEventListener("click", (event) => {
+                            inspectedUser(event.currentTarget.id);
+                            
+                        });
+                        
+                    })
+                    document.querySelectorAll(".confirm").forEach((btn) => {
+                        btn.addEventListener("click", (event) => {
+                            confirmRequest(event.currentTarget.id);
+                            
+                        });
+                        
+                    })
+                    document.querySelectorAll(".delete").forEach((btn) => {
+                        btn.addEventListener("click", (event) => {
+                            deleteRequest(event.currentTarget.id);
+                            
+                        });
+                        
+                    })
+                })
+            })
 })
+
 })
-        
-    })
-    
+
 }
 getFriendRequests()
 let loginUserFriendsArr = [];
@@ -275,17 +275,17 @@ async function confirmRequest(userUid) {
         // 🔹 Query the logged-in user's document
         let queryLoginUser = query(collection(db, "users"), where("uid", "==", loginUserUid));
         const snapshot = await getDocs(queryLoginUser);
-
+        
         if (!snapshot.empty) {
             const userDoc = snapshot.docs[0]; // Get the document snapshot
             const userDocRef = userDoc.ref; // Get the document reference
             const userData = userDoc.data(); // Get user data
-
+            
             // 🔹 Update the logged-in user's friends array
             loginUserFriendsArr = userData.friends
-                ? [userUid, ...userData.friends]
-                : [userUid];
-
+            ? [userUid, ...userData.friends]
+            : [userUid];
+            
             await updateDoc(userDocRef, {
                 friends: loginUserFriendsArr
             });
@@ -293,21 +293,21 @@ async function confirmRequest(userUid) {
             console.error("Logged-in user document not found.");
             return;
         }
-
+        
         // 🔹 Query the requested user's document
         let queryRequestedUser = query(collection(db, "users"), where("uid", "==", userUid));
         const inSnapshot = await getDocs(queryRequestedUser);
-
+        
         if (!inSnapshot.empty) {
             const requestedUserDoc = inSnapshot.docs[0]; // Get document snapshot
             const requestedUserDocRef = requestedUserDoc.ref; // Get reference
             const requestedUserData = requestedUserDoc.data(); // Get user data
-
+            
             // 🔹 Update the requested user's friends array
             requestedUserFriendsArr = requestedUserData.friends
-                ? [loginUserUid, ...requestedUserData.friends]
-                : [loginUserUid];
-
+            ? [loginUserUid, ...requestedUserData.friends]
+            : [loginUserUid];
+            
             await updateDoc(requestedUserDocRef, {
                 friends: requestedUserFriendsArr
             });
@@ -315,29 +315,36 @@ async function confirmRequest(userUid) {
             console.error("Requested user document not found.");
             return;
         }
-
+        
         let q = query(collection(db, "friend_requests"),where('from','==',userUid),where('to','==',loginUserUid));
         onSnapshot(q, (querySnapshot) => {
             querySnapshot.forEach(async (requestDoc) => {
                 await deleteDoc(doc(db, "friend_requests", requestDoc.id));
             });
         })
+         
+        messageModal('Friend request accepted successfully!')
         
-
-        
-
-        messageModal("Request Accepted!");
-
     } catch (error) {
         console.error("Error in confirmRequest:", error);
     }
 }
 
 async function deleteRequest(userUid) {
-    let q = query(collection(db, "friend_requests"),where('from','==',userUid),where('to','==',loginUserUid));
-    onSnapshot(q, (querySnapshot) => {
-        querySnapshot.forEach(async (requestDoc) => {
-            await deleteDoc(doc(db, "friend_requests", requestDoc.id));
-        });
-    })
+    try {
+        
+        let q = query(collection(db, "friend_requests"),where('from','==',userUid),where('to','==',loginUserUid));
+        onSnapshot(q, (querySnapshot) => {
+            querySnapshot.forEach(async (requestDoc) => {
+                await deleteDoc(doc(db, "friend_requests", requestDoc.id));
+            });
+        })
+        messageModal('Friend request declined successfully!')
+    } catch (error) {
+        console.log(error);
+        
+    }
 }
+document.querySelector('.back-button').addEventListener('click',function() {
+    window.location.replace('../../dashboard/dashboard.html')
+})

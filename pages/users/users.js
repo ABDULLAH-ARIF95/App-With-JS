@@ -32,6 +32,7 @@ freindsBtn.style.display = 'none'
 let username = []
 var friendsNum = document.querySelector('#friends-count')
 let userData = async () => {
+  var friendsArray = []
     try {
       const q = query(collection(db, "users"), where("uid", "==", userUid));
       const querySnapshot = await getDocs(q);
@@ -57,17 +58,24 @@ let userData = async () => {
         cancelRequestBtn.style.display = 'block'
       }
     })
-    
       querySnapshot.forEach(async (doc) => {
         console.log(doc.data().friends===loginUserUid);
-        
-        if (doc.data().friends===loginUserUid){
-          // friendCount = doc.data().friends.length
-          friendsNum.innerHTML = doc.data().friends.length
-          freindRequestBtn.style.display = 'none'
-          freindsBtn.style.display = 'flex'
-          console.log('friends',doc.data().friends.length);
-        }
+        // for (let index = 0; index < array.length; index++) {
+        //   const element = array[index];
+          
+        // }
+        friendsArray = doc.data().friends
+        friendsArray.forEach((friend)=>{
+          console.log(friend);
+          
+          if (friend===loginUserUid){
+            // friendCount = doc.data().friends.length
+            friendsNum.innerHTML = doc.data().friends.length
+            freindRequestBtn.style.display = 'none'
+            freindsBtn.style.display = 'flex'
+            console.log('friends',doc.data().friends.length);
+          }
+        })
         console.log("doc.data() =>", doc.data());
         // var username =  document.querySelector("#profile-pic");
         document.getElementById("username").innerHTML = doc.data().displayName;
