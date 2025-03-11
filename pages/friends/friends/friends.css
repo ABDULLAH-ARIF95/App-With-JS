@@ -150,7 +150,7 @@
     .message-btn,
   .delete-btn {
     font-size: 8px;
-    width: 80px;
+    width: 60px;
     gap: 2px;
 }
 .friend-name {
@@ -159,5 +159,26 @@
   width: 30%;
   margin-left: -13px;
   
+}
+.back-button{
+  width: 20%;
+}
+}
+  @media only screen and (max-width:375px) {
+    .message-btn,
+  .delete-btn {
+    font-size: 8px;
+    width: 60px;
+    gap: 2px;
+}
+.friend-name {
+  
+  font-size: 12px;
+  width: 30%;
+  margin-left: -13px;
+  
+}
+.back-button{
+  width: 25%;
 }
 }

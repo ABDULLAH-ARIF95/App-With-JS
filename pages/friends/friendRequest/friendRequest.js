@@ -148,7 +148,12 @@ function filterUsers() {
     const query = document.getElementById("search-user").value.toLowerCase();
     
     usersArr.forEach(user => {
+        console.log(user.displayName.toLowerCase().includes(query));
+        
+        
         if (user.displayName.toLowerCase().includes(query)) {
+            console.log('user');
+            
             console.log("Matched User:", user.displayName); // Logs the entire user object
             usersDiv.innerHTML += `
             <div class="user-card" >
@@ -167,9 +172,6 @@ function filterUsers() {
          // Logs the entire user object
          
         });
-    if (query === '') {
-        fetchUsers()
-    }
 }
 // console.log(filterUsers());
 document.getElementById("search-user").addEventListener("input", function () {
