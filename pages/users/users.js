@@ -212,6 +212,7 @@ let requestedUserFriendsArr = [];
             await deleteDoc(doc(db, "friend_requests", requestDoc.id));
           });
         })
+        
         confirmRequestBtn.style.display = 'none'
         rejectRequestBtn.style.display = 'none'
         freindRequestBtn.style.display = 'block'

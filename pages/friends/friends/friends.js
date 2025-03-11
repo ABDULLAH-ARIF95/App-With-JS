@@ -82,7 +82,7 @@ try {
                 <span class="friend-name">${friends.data().displayName}</span>
                 </div>
                 <div class="friend-actions">
-                <button class="message-btn" onclick="messageFriend('John Doe')">
+                <button class="message-btn" >
                 <i class="fa-solid fa-message"></i> Message
                 </button>
                 <button class="delete-btn ${friends.data().uid}" id=${friends.id} ">
@@ -104,6 +104,14 @@ try {
             document.querySelectorAll(".delete-btn").forEach((btn) => {
                 btn.addEventListener("click", (event) => {
                     deleteFriend(event.currentTarget.id,event.currentTarget);
+                    
+                });
+                
+            })
+            document.querySelectorAll(".message-btn").forEach((btn) => {
+                btn.addEventListener("click", (event) => {
+                    window.location.replace('../chats/chat.html')
+                   ;
                     
                 });
                 
