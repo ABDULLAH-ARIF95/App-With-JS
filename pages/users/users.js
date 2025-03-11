@@ -64,18 +64,21 @@ let userData = async () => {
         //   const element = array[index];
           
         // }
-        friendsArray = doc.data().friends
-        friendsArray.forEach((friend)=>{
-          console.log(friend);
+        if (doc.data().friends) {
+          friendsArray = doc.data().friends
+          friendsArray.forEach((friend)=>{
+            console.log(friend);
+            
+            if (friend===loginUserUid){
+              // friendCount = doc.data().friends.length
+              friendsNum.innerHTML = doc.data().friends.length
+              freindRequestBtn.style.display = 'none'
+              freindsBtn.style.display = 'flex'
+              console.log('friends',doc.data().friends.length);
+            }
+          })
           
-          if (friend===loginUserUid){
-            // friendCount = doc.data().friends.length
-            friendsNum.innerHTML = doc.data().friends.length
-            freindRequestBtn.style.display = 'none'
-            freindsBtn.style.display = 'flex'
-            console.log('friends',doc.data().friends.length);
-          }
-        })
+        }
         console.log("doc.data() =>", doc.data());
         // var username =  document.querySelector("#profile-pic");
         document.getElementById("username").innerHTML = doc.data().displayName;

@@ -95,8 +95,8 @@ async function fetchUsers(){
              <button class="friends-btn" style='display:${isFriend? "block" : "none"}'><i class="fa fa-user-friends" ></i> Friends</button>
             </div>
             `
-            document.querySelectorAll(".image").forEach((btn) => {
-                btn.addEventListener("click", (event) => {
+            document.querySelectorAll(".image").forEach((image) => {
+                image.addEventListener("click", (event) => {
                     inspectedUser(event.currentTarget.id);
                     
                 });
