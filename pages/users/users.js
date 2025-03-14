@@ -1,4 +1,7 @@
 let loginUserUid = localStorage.getItem('loginUserUid')
+let fromPage= localStorage.getItem('fromPage')
+console.log(fromPage);
+
 if (!loginUserUid) {
   window.location.replace("../../index.html");
 }
@@ -19,7 +22,18 @@ import { auth, db } from "../../firebaseConfig.js";
 let userUid = localStorage.getItem('inspectedUserUid')
 console.log(userUid);
 document.querySelector('#back').addEventListener('click',function(){
-  window.location.replace('../dashboard/dashboard.html')
+  if (fromPage==='friendRequest') {
+    window.location.replace('../friends/friendRequest/friendRequest.html')
+    return
+  }
+  if (fromPage==='dashboard') {
+    window.location.replace('../dashboard/dashboard.html')
+    return
+  }
+  if (fromPage==='friends') {
+    window.location.replace('../friends/friends/friends.html')
+    return
+  }
 })
 let userProfilePic = []
 var freindRequestBtn = document.querySelector('#friend-request-btn')

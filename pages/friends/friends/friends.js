@@ -32,6 +32,7 @@ async function messageModal(messageText) {
   let userFriendUid = []
   let userDataArr = [];
   let userDataId = '';
+  let deletFriendModal = document.querySelector('.confirm-modal')
 let userFriendsData = async () => {
 friendsListDiv.innerHTML = '';
 loggedInUserFriendsIds = [];
@@ -50,7 +51,19 @@ userFriendUid = [];
        
         if (!doc.data().friends || doc.data().friends.length === 0) {
             console.log("No friends found");
-            friendsListDiv.innerHTML = "<p>No friends found</p>";
+            friendsListDiv.innerHTML = `
+            <div class="no-friends-container">
+  <h2>No friends yet. Go make some!</h2>
+  <button  class="add-friends-btn" >
+        <i class="fas fa-user-plus btn-icon"></i>
+    Add Friends
+  </button>
+</div>
+
+            `;
+            document.querySelector('.add-friends-btn').addEventListener('click',function(){
+                window.location.replace('../friendRequest/friendRequest.html')
+            })
             return; // Exit function early
           }
 console.log('working');
@@ -59,12 +72,8 @@ try {
     const querySnapshotFriends = await getDocs(qFriends);
     
     
-    console.log('working',querySnapshotFriends.docs.map(fr => {
-        console.log(fr.data());
-        
-    }));
     querySnapshotFriends.forEach((friends) => {
-                console.log('working');
+             
                 console.log(friends.data());
                 loggedInUserFriendsIds.push(
                     friends.data().uid)
@@ -73,8 +82,7 @@ try {
                     id :friends.id,
                     friendsArr:friends.data().friends
                 })
-                console.log('working');
-                console.log('working');
+                
                 friendsListDiv.innerHTML += `
                 <div class="friend-card">
                 <img id = "${friends.data().uid}" src="${friends.data().photoURL}" alt="Profile Picture" class="friend-avatar">
@@ -86,28 +94,30 @@ try {
                 <i class="fa-solid fa-message"></i> Message
                 </button>
                 <button class="delete-btn ${friends.data().uid}" id=${friends.id} ">
-                <i class="fa-solid fa-user-minus" ></i> Delete Friend
+                <i class="fa-solid fa-user-minus" ></i> Delete 
                 </button>
                 </div>
                 </div>
                 `
             })
-            console.log('working');
+          
             document.querySelectorAll(".friend-avatar").forEach((btn) => {
                 btn.addEventListener("click", (event) => {
                     inspectedUser(event.currentTarget.id);
                     
                 });
                 
-                console.log('working');
             })
             document.querySelectorAll(".delete-btn").forEach((btn) => {
                 btn.addEventListener("click", (event) => {
-                    deleteFriend(event.currentTarget.id,event.currentTarget);
+                    deletFriendModal.style.display = 'block'
+                    deleteFriendModalBtn(event.currentTarget.id,event.currentTarget)
                     
                 });
                 
             })
+           
+         
             document.querySelectorAll(".message-btn").forEach((btn) => {
                 btn.addEventListener("click", (event) => {
                     window.location.replace('../chats/chat.html')
@@ -152,8 +162,11 @@ function inspectedUser(id){
         
     }
     localStorage.setItem('inspectedUserUid',id)
+  localStorage.setItem('fromPage','friends')
+
     window.location.replace('../../users/users.html')
 }
+
 // let friendsData = async () => {
     //   try {
         //     await userData()
@@ -183,7 +196,16 @@ function inspectedUser(id){
 // query(collection(db, "users"), where('uid', '==', requests.data().from))
 userFriendsData()
 // userFriendUid.push(friends.data().friends)
-
+function deleteFriendModalBtn(id,uid) {
+    document.querySelector("#confirm-yes-btn").addEventListener("click", () => {
+        deleteFriend(id,uid);
+        
+    });
+}
+document.querySelector("#confirm-cancel-btn").addEventListener("click", () => {
+    deletFriendModal.style.display = 'none'
+    
+});
 async function deleteFriend(id,uid){
 console.log(uid.classList[1]);
 
@@ -205,6 +227,7 @@ console.log(uid.classList[1]);
         friends: userFriends
     }).then(async ()=>{
         messageModal("Friend Removed Successfuly!")
+        deletFriendModal.style.display = 'none'
         loggedInUserFriendsIds = [];
         userFriendUid = [];
         await userFriendsData();

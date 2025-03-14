@@ -138,6 +138,7 @@ function inspectedUser(id){
         
     }
     localStorage.setItem('inspectedUserUid',id)
+    localStorage.setItem('fromPage','friendRequest')
     window.location.replace('../../users/users.html')
 }
 

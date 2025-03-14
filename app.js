@@ -92,11 +92,12 @@ const pakistaniPhoneRegex = /^03[0-9]{9}$/;
 if (!pakistaniPhoneRegex.test(phoneNumInp)) {
   
   phoneNumErrorMessage.textContent = " Invalid Phone Number! ";
-    phoneNumErrorMessage.style.display = 'block'
-    return
-  }
-  phoneNumErrorMessage.style.display = 'none'
-  
+  phoneNumErrorMessage.style.display = 'block'
+  return
+}
+phoneNumErrorMessage.style.display = 'none'
+return true
+
 }
 
 //  Validate Name
@@ -108,13 +109,14 @@ function isValidName() {
     nameErrorMessage.style.display = 'block'
     return
   }
- 
+  
   if (!nameRegex.test(nameInp)) {
     nameErrorMessage.innerText = "invalid name (atleast 4 characters required)"
     nameErrorMessage.style.display = 'block'
     return 
   }
   nameErrorMessage.style.display = 'none'
+  return true
   
 }
 
@@ -126,15 +128,16 @@ function isValidPassword() {
     passErrorMessage.textContent = "Password must be at least 6 characters!";
     passErrorMessage.style.display = "block";
     return false;
-}
-const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{6,}$/;
-    if (!strongPasswordRegex.test(password)) {
-      passErrorMessage.textContent = "Weak password!   (A-Z)(a-z)(0-9)";
-      passErrorMessage.style.display = "block";
-      return false;
   }
+const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{6,}$/;
+if (!strongPasswordRegex.test(password)) {
+  passErrorMessage.textContent = "Weak password!   (A-Z)(a-z)(0-9)";
+  passErrorMessage.style.display = "block";
+  return false;
+}
 
-    passErrorMessage.style.display = 'none'
+passErrorMessage.style.display = 'none'
+return true
    
   }
   
@@ -168,6 +171,8 @@ let phoneNumInp = document.querySelector("#phoneNum-inp").value;
    alert('Please input all the fields')
    return
   }
+  console.log(isValidEmail,isValidName,isValidPakistaniPhone(),isValidPassword());
+  
   if (!isValidEmail()||!isValidName()||!isValidPakistaniPhone()||!isValidPassword()) {
    alert('Please input all the fields correctly')
    return

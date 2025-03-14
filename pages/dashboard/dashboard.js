@@ -231,6 +231,7 @@ var inspectedUserId;
   }
    localStorage.setItem('inspectedUserUid',id)
   window.location.replace('../users/users.html')
+  localStorage.setItem('fromPage','dashboard')
 }
 async function likeFun(post_id,like_btn) {
   var post =await getDoc(doc(db, "posts", post_id))

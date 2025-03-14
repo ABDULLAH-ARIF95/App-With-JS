@@ -146,6 +146,165 @@
     .delete-btn:hover {
         background-color: #c0392b;
   }
+  /* Basic Reset (optional but recommended) */
+
+/* Delete Button Style (Optional) */
+#confirm-delete-btn {
+  padding: 12px 20px;
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#confirm-delete-btn:hover {
+  background-color: #2980b9;
+}
+
+/* Confirmation Modal Styles */
+.confirm-modal {
+  display: none; 
+  position: fixed; 
+  z-index: 999; 
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  background-color: rgba(0, 0, 0, 0.5); 
+  /* display: flex; */
+  /* align-items: center; */
+  justify-content: center;
+  padding: 20px; /* Small padding for mobile screens */
+}
+
+.confirm-modal-content {
+  margin-top: 15%;
+  margin-left: 30%;
+  left: 0;
+  top: 50%;
+  background-color: #fff;
+  padding: 25px 20px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 400px; /* Limits max width on large screens */
+  text-align: center;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.confirm-modal-content h2 {
+  margin-bottom: 15px;
+  font-size: 22px;
+}
+
+.confirm-modal-content p {
+  margin-bottom: 20px;
+  color: #555;
+}
+
+.confirm-modal-actions {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap; /* Stack buttons on smaller screens */
+}
+
+.confirm-modal-actions button {
+  flex: 1 1 45%; /* Responsive width */
+  margin: 5px;
+  padding: 12px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+#confirm-yes-btn {
+  background-color: #e74c3c;
+  color: #fff;
+}
+
+#confirm-cancel-btn {
+  background-color: #7f8c8d;
+  color: #fff;
+}
+
+/* Hover Effects */
+#confirm-yes-btn:hover {
+  background-color: #c0392b;
+}
+
+#confirm-cancel-btn:hover {
+  background-color: #636e72;
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+.no-friends-container {
+  text-align: center;
+  margin-top: 0%;
+
+  margin-top: 50px;
+}
+
+.no-friends-container h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #555;
+}
+
+.add-friends-btn {
+  display: inline-flex; /* For icon + text */
+  border: none;
+  align-items: center;
+  gap: 10px;
+  background-color: #3498db;
+  color: #fff;
+  text-decoration: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  font-size: 16px;
+}
+
+.add-friends-btn:hover {
+  background-color: #2980b9;
+}
+
+.btn-icon {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+
+/* Media Queries for Smaller Devices */
+@media (max-width: 480px) {
+  .confirm-modal-content {
+    padding: 20px 15px;
+    margin-left: 4%;
+    width: 80%;
+    margin-top: 25%;
+  }
+  .confirm-modal-content h2 {
+    font-size: 20px;
+  }
+
+  .confirm-modal-content p {
+    font-size: 14px;
+  }
+
+  .confirm-modal-actions button {
+    flex: 1 1 100%;
+    font-size: 16px;
+  }
+}
+
   @media only screen and (max-width:500px) {
     .message-btn,
   .delete-btn {
@@ -168,12 +327,18 @@
     .message-btn,
   .delete-btn {
     font-size: 8px;
-    width: 60px;
+    /* text-align: left; */
+    padding-left: 2%;
+    width: 50px;
     gap: 2px;
+  }
+  .delete-btn{
+  padding-left: 5%;
+
 }
 .friend-name {
   
-  font-size: 12px;
+  font-size: 10px;
   width: 30%;
   margin-left: -13px;
   

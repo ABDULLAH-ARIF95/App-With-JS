@@ -1,7 +1,3 @@
-const loginUserUid = localStorage.getItem("loginUserUid");
-if (!loginUserUid) {
-  window.location.replace("../../index.html");
-}
 import { sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { auth } from "../../firebaseConfig.js";
 document.getElementById("reset-password-btn").addEventListener("click", function () {
